@@ -1,0 +1,46 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <a href="/dashboard" class="back-link">← Înapoi la dashboard</a>
+    <h1>🌱 Recoltare proaspătă</h1>
+    <p class="sub">Trimite o notificare clienților când ai produse proaspăt culese.</p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <form method="POST" action="/notificare-noua" class="form panel">
+    <label>
+      <span>Alege produsul (opțional)</span>
+      <select name="product_id">
+        <option value="">— fără produs selectat —</option>
+        <% myProducts.forEach(pr => { %>
+          <option value="<%= pr.id %>"><%= pr.name %> · <%= pr.price.toFixed(2).replace('.', ',') %> lei / <%= pr.unit %></option>
+        <% }) %>
+      </select>
+      <small>Se completează automat numele, cantitatea și prețul în notificare.</small>
+    </label>
+    <label>
+      <span>Titlul notificării</span>
+      <input type="text" name="title" placeholder="ex. Roșii proaspete culese azi!">
+    </label>
+    <label>
+      <span>Mesaj</span>
+      <textarea name="message" rows="4" placeholder="ex. Am recoltat azi dimineață 20 kg de roșii cherry — 9 lei/kg. Vino să le iei proaspete!"></textarea>
+    </label>
+    <div class="notify-preview panel-light">
+      <strong>Previzualizare notificare (clienții vor vedea):</strong>
+      <div class="notify-demo">
+        <span class="notify-demo-icon">🌱</span>
+        <div>
+          <strong>Roșii cherry — 9,00 lei / kg</strong>
+          <p>Am recoltat azi dimineață 20 kg de roșii cherry — 9 lei/kg. Disponibil la Ferma ta!</p>
+          <small>acum</small>
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary">📣 Trimite notificarea</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

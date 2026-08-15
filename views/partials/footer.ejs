@@ -1,0 +1,42 @@
+    <footer class="site-footer">
+      <div class="footer-row">
+        <span class="footer-logo"><img src="/images/logo.jpeg" alt="Aprozar Românesc"></span>
+        <div>
+          <strong>Aprozar Românesc</strong>
+          <p>Legăm producătorii locali români de clienți. Produse naturale, direct de la sursă.</p>
+        </div>
+      </div>
+      <p class="footer-copy">© <%= new Date().getFullYear() %> Aprozar Românesc · Făcut cu <span class="heart">❤</span> pentru produsele românești</p>
+    </footer>
+  </div>
+  <% if (!user) { %>
+  <div class="modal-overlay" id="quick-login-modal" hidden>
+    <div class="modal-box">
+      <button type="button" class="modal-close" data-modal-close>✕</button>
+      <h3>Autentificare rapidă</h3>
+      <p class="modal-sub">Recumpără rapid ca și ultima dată.</p>
+      <form id="quick-login-form" class="form" novalidate>
+        <label>
+          <span>Număr de telefon</span>
+          <input type="tel" name="identifier" inputmode="tel" placeholder="07xx xxx xxx" required autocomplete="tel">
+        </label>
+        <label>
+          <span>Parolă</span>
+          <input type="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+        </label>
+        <p class="quick-login-error" hidden></p>
+        <button type="submit" class="btn btn-primary btn-block" id="quick-login-btn">Intră în cont</button>
+      </form>
+      <p class="auth-alt">Nu ai cont? <a href="/register?next=/">Creează unul gratuit</a></p>
+    </div>
+  </div>
+  <% } %>
+  <div class="img-lightbox" id="img-lightbox" hidden>
+    <div class="img-lightbox-box">
+      <button type="button" class="img-lightbox-close" id="img-lightbox-close" aria-label="Închide">✕</button>
+      <img id="img-lightbox-img" alt="">
+    </div>
+  </div>
+  <script src="/js/app.js"></script>
+</body>
+</html>

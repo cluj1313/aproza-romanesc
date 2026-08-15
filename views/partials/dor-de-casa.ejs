@@ -1,0 +1,26 @@
+<section class="ddc-card">
+  <div class="ddc-info">
+    <div class="ddc-title">
+      <span class="ddc-icon">🏪</span>
+      <div>
+        <strong>Dor de Casă</strong>
+        <small>Lanț de magazine · produse 100% românești</small>
+      </div>
+    </div>
+    <p class="ddc-text">
+      <span class="ddc-points">300+ magazine</span> în toată România. Găsește magazinul cel mai apropiat de tine.
+    </p>
+    <div class="ddc-actions">
+      <button type="button" class="btn btn-cta btn-sm" id="nearestStoreBtn">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Magazinul cel mai apropiat
+      </button>
+      <a href="/magazine" class="btn btn-outline-light btn-sm">Toate magazinele</a>
+    </div>
+  </div>
+  <div id="nearestStoreResult" class="ddc-result hidden">
+    <p>📍 <strong id="nsName"></strong></p>
+    <p id="nsAddr"></p>
+    <span id="nsDist" class="chip chip-light"></span>
+  </div>
+</section>

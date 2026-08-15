@@ -1,0 +1,66 @@
+<%- include('../partials/header', { title }) %>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Produse autentice,<br>direct de la <span class="highlight">producătorii locali</span></h1>
+    <p class="hero-sub">Descoperă fermieri, apicultori și mici producători din toată România. Cumpără direct, fără intermediari.</p>
+    <form method="GET" action="/" class="search-bar">
+      <input type="text" name="q" placeholder="Caută fermă, localitate sau produs…" value="<%= filters.q %>">
+      <button type="submit" class="btn btn-primary">Caută</button>
+    </form>
+    <div class="hero-stats">
+      <span><strong><%= producers.length %></strong> producători</span>
+      <span><strong>42</strong> județe</span>
+      <span><strong>0</strong> intermediari</span>
+    </div>
+  </div>
+</section>
+
+<section class="filters">
+  <form method="GET" action="/" class="filter-form">
+    <input type="hidden" name="q" value="<%= filters.q %>">
+    <label>
+      <span>Județ</span>
+      <select name="county" onchange="this.form.submit()">
+        <option value="">Toate județele</option>
+        <% counties.forEach(c => { %>
+          <option value="<%= c %>" <%= filters.county === c ? 'selected' : '' %>><%= c %></option>
+        <% }) %>
+      </select>
+    </label>
+    <% if (filters.q || filters.county) { %>
+      <a href="/" class="btn btn-ghost btn-sm">✕ Resetează filtrele</a>
+    <% } %>
+  </form>
+</section>
+
+<section class="producers-grid">
+  <% if (producers.length === 0) { %>
+    <div class="empty-state">
+      <p class="empty-emoji">🔍</p>
+      <h3>Nu am găsit producători</h3>
+      <p>Încearcă alt județ sau alt termen de căutare.</p>
+      <a href="/" class="btn btn-primary">Vezi toți producătorii</a>
+    </div>
+  <% } else { %>
+    <% producers.forEach(p => { %>
+      <a href="/producator/<%= p.id %>" class="producer-card">
+        <div class="card-img">
+          <% if (p.image_url) { %>
+            <img src="<%= p.image_url %>" alt="<%= p.name %>" loading="lazy">
+          <% } else { %>
+            <div class="img-placeholder">🌾</div>
+          <% } %>
+        </div>
+        <div class="card-body">
+          <h3><%= p.name %></h3>
+          <p class="card-loc">📍 <%= p.county %><%= p.locality ? ' · ' + p.locality : '' %></p>
+          <p class="card-desc"><%= p.description ? p.description.slice(0, 110) + (p.description.length > 110 ? '…' : '') : 'Producător local autentic.' %></p>
+          <span class="badge"><%= p.product_count %> produse</span>
+        </div>
+      </a>
+    <% }) %>
+  <% } %>
+</section>
+
+<%- include('../partials/footer') %>

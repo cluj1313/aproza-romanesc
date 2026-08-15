@@ -1,0 +1,67 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <h1>Contul meu</h1>
+    <p class="sub">Bine ai revenit, <strong><%= user.name %></strong></p>
+    <% if (user.phone) { %><p class="sub">📞 <%= user.phone %></p><% } %>
+  </div>
+
+  <div class="account-cards">
+    <% if (isProducer) { %>
+      <a href="/dashboard" class="account-card">
+        <span class="account-icon">📊</span>
+        <div><strong>Dashboard producător</strong><small>Gestionează produsele, anunțurile și recenziile</small></div>
+      </a>
+      <a href="/profil" class="account-card">
+        <span class="account-icon">🌾</span>
+        <div><strong>Profilul fermei</strong><small>Descriere, locație, poze, telefon, WhatsApp</small></div>
+      </a>
+      <a href="/produs/nou" class="account-card">
+        <span class="account-icon">➕</span>
+        <div><strong>Adaugă produs</strong><small>Publică un produs nou cu poză și preț</small></div>
+      </a>
+      <a href="/notificare-noua" class="account-card">
+        <span class="account-icon">🌱</span>
+        <div><strong>Recoltare proaspătă</strong><small>Anunță clienții despre o nouă recoltă</small></div>
+      </a>
+      <a href="/anunt/nou" class="account-card">
+        <span class="account-icon">📢</span>
+        <div><strong>Anunț nou</strong><small>Reduceri, oferte, transport gratuit, concediu</small></div>
+      </a>
+    <% } else { %>
+      <a href="/" class="account-card">
+        <span class="account-icon">🛒</span>
+        <div><strong>Mergi la cumpărături</strong><small>Descoperă producătorii locali din zona ta</small></div>
+      </a>
+      <a href="/categorii" class="account-card">
+        <span class="account-icon">🗂️</span>
+        <div><strong>Explorează categoriile</strong><small>Legume, fructe, lactate, panificație și multe altele</small></div>
+      </a>
+      <a href="/notificari" class="account-card">
+        <span class="account-icon">🔔</span>
+        <div><strong>Notificările mele</strong><small>Vezi când producătorii au recolte proaspete</small></div>
+      </a>
+    <% } %>
+    <a href="/cumparaturi" class="account-card">
+      <span class="account-icon">🧺</span>
+      <div><strong>Coșul meu</strong><small><%= cartCount %> produse în coș</small></div>
+    </a>
+  </div>
+
+  <div class="account-zone">
+    <h2>De ce Aprozar Românesc?</h2>
+    <ul class="benefits">
+      <li>✅ Produse <strong>100% naturale românești</strong></li>
+      <li>✅ Cumperi <strong>direct de la producător</strong>, fără intermediari</li>
+      <li>✅ Ajuți fermele și gospodăriile <strong>locale din România</strong></li>
+      <li>✅ Contact direct prin <strong>WhatsApp sau telefon</strong></li>
+    </ul>
+  </div>
+
+  <form method="POST" action="/logout" class="account-logout">
+    <button type="submit" class="btn btn-danger btn-block">Deconectare</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,18 @@
+<div class="product-card">
+  <div class="pcard-img">
+    <% if (pr.image_url) { %>
+      <img src="<%= pr.image_url %>" alt="<%= pr.name %>" loading="lazy">
+    <% } else { %>
+      <div class="pcard-fallback">🥬</div>
+    <% } %>
+  </div>
+  <div class="pcard-body">
+    <h4><%= pr.name %></h4>
+    <p class="pcard-provenance">De la <%= pr.producer_name %> <%= pr.county ? '· ' + pr.county : '' %></p>
+    <div class="pcard-footer">
+      <span class="price"><%= pr.price.toFixed(2).replace('.', ',') %> lei</span>
+      <span class="unit">/ <%= pr.unit %></span>
+      <button type="button" class="add-btn add-btn-round" data-add="<%= pr.id %>" aria-label="Adaugă în coș">+</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="/images/logo.jpeg" alt="Aprozar Românesc">
+    </div>
+    <h1>Bine ai revenit! 👋</h1>
+    <p class="auth-sub">Autentifică-te cu numărul de telefon.</p>
+
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+    <form method="POST" action="/login" class="form">
+      <input type="hidden" name="next" value="<%= next %>">
+      <label>
+        <span>Număr de telefon *</span>
+        <input type="tel" name="identifier" required placeholder="07xx xxx xxx" autofocus>
+      </label>
+      <label>
+        <span>Parolă</span>
+        <input type="password" name="password" required placeholder="••••••••">
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Autentificare</button>
+    </form>
+
+    <p class="auth-alt">Nu ai cont? <a href="/register">Creează unul gratuit</a></p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

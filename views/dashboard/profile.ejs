@@ -1,0 +1,111 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <a href="/dashboard" class="back-link">← Înapoi la dashboard</a>
+    <h1>Profilul fermei</h1>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <% if (success) { %><div class="alert alert-success"><%= success %></div><% } %>
+  <% if (uploadError) { %><div class="alert alert-error"><%= uploadError %></div><% } %>
+
+  <form method="POST" action="/profil" enctype="multipart/form-data" class="form panel">
+    <label>
+      <span>Numele fermei *</span>
+      <input type="text" name="name" required value="<%= producer.name %>">
+    </label>
+    <label>
+      <span>Numele producătorului</span>
+      <input type="text" name="owner_name" value="<%= producer.owner_name %>" placeholder="ex. Ion Popescu">
+    </label>
+    <label>
+      <span>Descriere</span>
+      <textarea name="description" rows="5" placeholder="Povestește despre ferma ta, metodele de producție…"><%= producer.description %></textarea>
+    </label>
+
+    <div class="form-row">
+      <label>
+        <span>Județ *</span>
+        <select name="county" required>
+          <% counties.forEach(c => { %>
+            <option value="<%= c %>" <%= producer.county === c ? 'selected' : '' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>
+        <span>Localitate</span>
+        <input type="text" name="locality" value="<%= producer.locality %>" placeholder="ex. com. Vâlcele">
+      </label>
+    </div>
+
+    <div class="form-row">
+      <label>
+        <span>Telefon</span>
+        <input type="tel" name="phone" value="<%= producer.phone %>" placeholder="07xx xxx xxx">
+      </label>
+      <label>
+        <span>WhatsApp</span>
+        <input type="tel" name="whatsapp" value="<%= producer.whatsapp %>" placeholder="07xx xxx xxx">
+      </label>
+    </div>
+    <label>
+      <span>Adresă</span>
+      <input type="text" name="address" value="<%= producer.address %>" placeholder="ex. Str. Livezii nr. 12">
+    </label>
+
+    <div class="form-row">
+      <label>
+        <span>Latitudine (pentru distanță)</span>
+        <input type="number" step="0.0001" name="lat" value="<%= producer.lat || '' %>" placeholder="ex. 44.8565">
+      </label>
+      <label>
+        <span>Longitudine</span>
+        <input type="number" step="0.0001" name="lng" value="<%= producer.lng || '' %>" placeholder="ex. 24.8692">
+      </label>
+    </div>
+    <p class="sub">💡 Găsește coordonatele fermei tale pe <a href="https://www.google.com/maps" target="_blank">Google Maps</a> (click dreapta pe hartă → primele numere sunt lat/lng).</p>
+
+    <div class="form-row">
+      <label class="upload-label">
+        <span>Avatar (poza ta) — din galerie</span>
+        <input type="file" name="image" accept="image/*" class="file-input">
+        <div class="file-preview">
+          <% if (producer.avatar_url) { %>
+            <img src="<%= producer.avatar_url %>" alt="Avatar">
+          <% } else { %>
+            <span>➕ Alege o poză</span>
+          <% } %>
+        </div>
+      </label>
+      <label class="upload-label">
+        <span>Imagine de fundal (grădina/ferma)</span>
+        <input type="file" name="cover_file" id="coverInput" accept="image/*" class="file-input">
+        <div class="file-preview cover-preview">
+          <% if (producer.cover_url) { %>
+            <img src="<%= producer.cover_url %>" alt="Cover">
+          <% } else { %>
+            <span>➕ Alege o poză</span>
+          <% } %>
+        </div>
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvează modificările</button>
+  </form>
+</div>
+
+<script>
+  document.querySelectorAll('.file-input').forEach(input => {
+    input.addEventListener('change', () => {
+      const preview = input.closest('.upload-label').querySelector('.file-preview img, .file-preview span');
+      if (input.files && input.files[0] && preview) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(input.files[0]);
+        preview.replaceWith(img);
+      }
+    });
+  });
+</script>
+
+<%- include('../partials/footer') %>

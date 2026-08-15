@@ -1,0 +1,41 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <a href="/dashboard" class="back-link">← Înapoi la dashboard</a>
+    <h1>📢 Anunț nou</h1>
+    <p class="sub">Apare pe pagina fermei tale și ca notificare pentru clienți.</p>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+  <form method="POST" action="/anunt/nou" class="form panel">
+    <div class="ann-type-grid">
+      <% types.forEach(t => { %>
+        <label class="ann-type-option">
+          <input type="radio" name="type" value="<%= t.id %>" <%= announcement && announcement.type === t.id ? 'checked' : (!announcement && t.id === 'discount' ? 'checked' : '') %> required>
+          <span class="ann-type-box"><span class="ann-type-icon"><%= t.icon %></span><strong><%= t.label %></strong></span>
+        </label>
+      <% }) %>
+    </div>
+    <label>
+      <span>Titlul anunțului *</span>
+      <input type="text" name="title" required value="<%= announcement ? announcement.title : '' %>" placeholder="ex. Reducere de 20% la miere">
+    </label>
+    <label>
+      <span>Reducere % (doar pentru reduceri)</span>
+      <input type="number" min="1" max="99" name="percent" value="<%= announcement ? announcement.percent : '' %>" placeholder="ex. 20">
+    </label>
+    <label>
+      <span>Descriere</span>
+      <textarea name="message" rows="3" placeholder="Detalii despre anunț…"><%= announcement ? announcement.message : '' %></textarea>
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" name="featured" value="1" <%= announcement && announcement.featured ? 'checked' : '' %>>
+      <span>⭐ Afișează pe cardul principal</span>
+    </label>
+    <button type="submit" class="btn btn-primary">Publică anunțul</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,54 @@
+<section class="home-section last-order-section">
+  <% if (!lastOrder) { %>
+    <div class="last-order-card last-order-empty">
+      <div class="last-order-title">
+        <h2 class="last-order-title-h">🕘 Ultimele Cumpărături</h2>
+        <% if (user) { %>
+          <p>Nu ai făcut încă nicio comandă.</p>
+          <small>Plasează prima comandă și o vei găsi aici pentru re-cumpărare rapidă.</small>
+        <% } else { %>
+          <p>Comandă rapid ca și ultima dată.</p>
+          <small>Autentifică-te o singură dată cu numărul de telefon.</small>
+          <button type="button" class="btn btn-primary btn-block" data-quick-login>⚡ Recumpără Rapid</button>
+        <% } %>
+      </div>
+    </div>
+  <% } else { %>
+
+    <div class="last-order-card">
+      <div class="last-order-head">
+        <h2 class="last-order-title-h">🕘 Ultimele Cumpărături</h2>
+        <button type="button" class="last-order-cta" data-reorder>⚡ Comandă rapid ca și ultima dată</button>
+      </div>
+
+      <% lastOrder.producers.forEach(pr => { %>
+        <% const prItems = lastOrder.items.filter(i => i.producer_id === pr.id) %>
+        <div class="last-order-producer-row">
+          <a href="/producator/<%= pr.id %>" class="last-order-producer">
+            <span class="last-order-avatar">
+              <% if (pr.avatar_url) { %><img src="<%= pr.avatar_url %>" alt=""><% } else { %>🏡<% } %>
+            </span>
+            <strong><%= pr.name %></strong>
+            <small><%= pr.county %></small>
+          </a>
+          <div class="last-order-items">
+            <% prItems.forEach(it => { %>
+              <div class="last-order-item">
+                <div class="last-order-thumb">
+                  <% if (it.image_url) { %><img src="<%= it.image_url %>" alt=""><% } else { %>🥬<% } %>
+                </div>
+                <div class="last-order-info">
+                  <strong><%= it.product_name %></strong>
+                  <small><%= it.qty %> × <%= it.price.toFixed(2).replace('.', ',') %> lei</small>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm" data-add="<%= it.product_id %>">+</button>
+              </div>
+            <% }) %>
+          </div>
+          <a href="/producator/<%= pr.id %>" class="btn btn-ghost btn-sm">Vezi produsele</a>
+        </div>
+      <% }) %>
+    </div>
+
+  <% } %>
+</section>

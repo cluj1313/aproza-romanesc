@@ -1,0 +1,39 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <h1>Căutare: „<%= query %>”</h1>
+  </div>
+
+  <% if (!query) { %>
+    <div class="empty-state"><p class="empty-emoji">🔍</p><h3>Scrie ceva în căutare</h3></div>
+  <% } else if (results.producers.length === 0 && results.products.length === 0) { %>
+    <div class="empty-state">
+      <p class="empty-emoji">🔍</p>
+      <h3>Niciun rezultat pentru „<%= query %>”</h3>
+      <p>Încearcă alt termen.</p>
+      <a href="/" class="btn btn-primary">Vezi tot</a>
+    </div>
+  <% } else { %>
+
+    <% if (results.products.length) { %>
+      <section class="home-section">
+        <div class="section-head"><h2>Produse</h2><span class="section-sub"><%= results.products.length %> găsite</span></div>
+        <div class="products-grid">
+          <% results.products.forEach(pr => { %><%- include('../partials/product-card', { pr }) %><% }) %>
+        </div>
+      </section>
+    <% } %>
+
+    <% if (results.producers.length) { %>
+      <section class="home-section">
+        <div class="section-head"><h2>Producători</h2><span class="section-sub"><%= results.producers.length %> găsiți</span></div>
+        <div class="producer-list">
+          <% results.producers.forEach(p => { %><%- include('../partials/producer-card', { p }) %><% }) %>
+        </div>
+      </section>
+    <% } %>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,40 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <h1>Magazine Dor de Casă</h1>
+    <p class="sub"><%= total %> de magazine în toată România · produse 100% românești</p>
+  </div>
+
+  <div class="stores-cta panel">
+    <p>
+      <% if (hasLocation) { %>
+        📍 Am găsit magazinele cele mai apropiate de tine, sortate după distanță.
+      <% } else { %>
+        Permite locația pentru a vedea magazinele cele mai apropiate de tine.
+      <% } %>
+    </p>
+    <button type="button" class="btn btn-primary" id="locateStores">📍 <span>Găsește magazinele apropiate</span></button>
+  </div>
+
+  <div class="store-list">
+    <% stores.forEach(s => { %>
+      <div class="store-card">
+        <div class="store-logo">🏪</div>
+        <div class="store-info">
+          <strong><%= s.name %> — <%= s.city %></strong>
+          <p><%= s.county %> · <%= s.address %></p>
+          <% if (s.distanceLabel) { %>
+            <span class="chip chip-distance">🚗 la <%= s.distanceLabel %></span>
+          <% } %>
+        </div>
+        <div class="store-actions">
+          <a href="https://www.google.com/maps?q=<%= s.lat %>,<%= s.lng %>" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Harta</a>
+          <% if (s.phone) { %><a href="tel:<%= s.phone %>" class="btn btn-primary btn-sm">Sună</a><% } %>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

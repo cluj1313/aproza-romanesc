@@ -1,0 +1,40 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <h1>Notificări</h1>
+    <p class="sub">Recolte proaspete și anunțuri de la producători</p>
+  </div>
+
+  <% if (notifications.length === 0) { %>
+    <div class="empty-state">
+      <p class="empty-emoji">🔔</p>
+      <h3>Nicio notificare</h3>
+      <p>Când producătorii au recolte proaspete, vei afla aici.</p>
+      <a href="/" class="btn btn-primary">Explorează producătorii</a>
+    </div>
+  <% } else { %>
+    <div class="notif-list">
+      <% notifications.forEach(n => { %>
+        <div class="notif-item <%= n.read ? '' : 'unread' %>">
+          <span class="notif-icon"><%= n.type === 'fresh' ? '🌱' : n.type === 'announcement' ? '📢' : 'ℹ️' %></span>
+          <div class="notif-body">
+            <strong><%= n.title %></strong>
+            <% if (n.message) { %><p><%= n.message %></p><% } %>
+            <small>
+              <%= n.producer_name ? 'de la ' + n.producer_name : '' %> · <%= n.created_at %>
+            </small>
+            <% if (n.producer_id) { %>
+              <a href="/producator/<%= n.producer_id %>" class="btn btn-ghost btn-sm">Vezi producătorul →</a>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <form method="POST" action="/notificari/citite" class="form">
+      <button type="submit" class="btn btn-ghost btn-block">Marchează toate ca citite</button>
+    </form>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,65 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container auth-wrap">
+  <div class="auth-card wide">
+    <div class="auth-logo">
+      <img src="/images/logo.jpeg" alt="Aprozar Românesc">
+    </div>
+    <h1>Creează un cont</h1>
+    <p class="auth-sub">Ești producător sau client?</p>
+
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+    <form method="POST" action="/register" class="form">
+      <div class="role-select">
+        <label class="role-option">
+          <input type="radio" name="role" value="customer" <%= form.role === 'customer' ? 'checked' : '' %> required>
+          <span class="role-box">
+            <span class="role-emoji">🛒</span>
+            <strong>Sunt client</strong>
+            <small>Caut și cumpăr produse locale</small>
+          </span>
+        </label>
+        <label class="role-option">
+          <input type="radio" name="role" value="producer" <%= form.role === 'producer' ? 'checked' : '' %> required>
+          <span class="role-box">
+            <span class="role-emoji">🌾</span>
+            <strong>Sunt producător</strong>
+            <small>Vreau să-mi vând produsele</small>
+          </span>
+        </label>
+      </div>
+
+      <label>
+        <span>Nume complet / Numele fermei *</span>
+        <input type="text" name="name" required value="<%= form.name %>" placeholder="ex. Ferma Popescu">
+      </label>
+
+      <label>
+        <span>Număr de telefon *</span>
+        <input type="tel" name="phone" required value="<%= form.phone %>" placeholder="07xx xxx xxx">
+        <small class="field-hint">Folosești telefonul pentru a te autentifica.</small>
+      </label>
+      <div class="form-row">
+        <label>
+          <span>Parolă *</span>
+          <input type="password" name="password" required placeholder="Minim 6 caractere">
+        </label>
+        <label>
+          <span>Confirmă parola *</span>
+          <input type="password" name="password2" required placeholder="Repetă parola">
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block">Creează contul</button>
+    </form>
+
+    <p class="auth-alt">Ai deja cont? <a href="/login">Autentifică-te</a></p>
+  </div>
+</div>
+
+<script>
+  // formularul e simplu: autentificare cu număr de telefon
+</script>
+
+<%- include('../partials/footer') %>

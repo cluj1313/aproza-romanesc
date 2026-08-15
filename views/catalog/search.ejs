@@ -1,0 +1,38 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-head">
+  <a href="/" class="back-link">← Înapoi la catalog</a>
+  <h1>Căutare: „<%= query %>”</h1>
+</div>
+
+<% if (producers.length === 0) { %>
+  <div class="empty-state">
+    <p class="empty-emoji">🔍</p>
+    <h3>Niciun rezultat pentru „<%= query %>”</h3>
+    <p>Încearcă alt termen sau caută toți producătorii.</p>
+    <a href="/" class="btn btn-primary">Vezi catalogul</a>
+  </div>
+<% } else { %>
+  <p class="result-count"><%= producers.length %> producători găsiți</p>
+  <div class="producers-grid">
+    <% producers.forEach(p => { %>
+      <a href="/producator/<%= p.id %>" class="producer-card">
+        <div class="card-img">
+          <% if (p.image_url) { %>
+            <img src="<%= p.image_url %>" alt="<%= p.name %>" loading="lazy">
+          <% } else { %>
+            <div class="img-placeholder">🌾</div>
+          <% } %>
+        </div>
+        <div class="card-body">
+          <h3><%= p.name %></h3>
+          <p class="card-loc">📍 <%= p.county %><%= p.locality ? ' · ' + p.locality : '' %></p>
+          <p class="card-desc"><%= p.description ? p.description.slice(0, 110) + (p.description.length > 110 ? '…' : '') : 'Producător local autentic.' %></p>
+          <span class="badge"><%= p.product_count %> produse</span>
+        </div>
+      </a>
+    <% }) %>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %>

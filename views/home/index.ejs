@@ -1,0 +1,98 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+
+  <%- include('../partials/dor-de-casa') %>
+
+  <%- include('../partials/last-order') %>
+
+  <% if (!filters.q && !filters.category) { %>
+    <section class="home-section">
+      <div class="section-head">
+        <h2>Cel Mai Apropiat Cultivator Local</h2>
+        <span class="section-sub"><% if (hasLocation) { %>Sortat după locația ta<% } else { %>Permite locația pentru a vedea distanțele față de tine<% } %></span>
+      </div>
+      <% if (!hasLocation) { %>
+        <button type="button" class="btn btn-primary btn-sm" id="locateCultivators">📍 <span>Activează locația</span></button>
+      <% } %>
+      <div class="cultivator-list">
+        <% producers.forEach(p => { %><%- include('../partials/cultivator-card', { c: p, isProducer, producerUserId }) %><% }) %>
+      </div>
+    </section>
+  <% } %>
+
+  <form method="GET" action="/" class="searchbar" role="search">
+    <svg class="searchbar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" name="q" value="<%= filters.q %>" placeholder="Ce cauți astăzi? (ex: roșii, mere…)" autocomplete="off">
+    <button type="button" class="searchbar-filter" id="filterToggle" aria-label="Filtre">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+    </button>
+  </form>
+
+  <div class="filter-drawer hidden" id="filterDrawer">
+    <form method="GET" action="/" class="filter-form">
+      <label>
+        <span>Categorie</span>
+        <select name="category" onchange="this.form.submit()">
+          <option value="">Toate categoriile</option>
+          <% categories.forEach(c => { %>
+            <option value="<%= c.name %>" <%= filters.category === c.name ? 'selected' : '' %>><%= c.icon %> <%= c.name %></option>
+          <% }) %>
+        </select>
+      </label>
+      <% if (filters.q || filters.category) { %>
+        <a href="/" class="btn btn-ghost btn-sm">✕ Resetează</a>
+      <% } %>
+    </form>
+  </div>
+
+  <% if (filters.q || filters.category) { %>
+    <div class="page-head">
+      <h1><%= filters.category ? filters.category : 'Rezultate pentru „' + filters.q + '”' %></h1>
+      <p class="sub"><%= producers.length %> producători găsiți</p>
+    </div>
+    <% if (producers.length === 0) { %>
+      <div class="empty-state">
+        <p class="empty-emoji">🔍</p>
+        <h3>Nu am găsit nimic</h3>
+        <p>Încearcă alt termen sau altă categorie.</p>
+        <a href="/" class="btn btn-primary">Vezi tot</a>
+      </div>
+    <% } else { %>
+      <div class="producer-list">
+        <% producers.forEach(p => { %><%- include('../partials/producer-card', { p }) %><% }) %>
+      </div>
+    <% } %>
+  <% } else { %>
+
+    <section class="home-section">
+      <div class="section-head">
+        <h2 class="farmers-title">POVEȘTI DE LA PRODUCĂTORII LOCALI</h2>
+      </div>
+      <div class="h-scroll">
+        <% farmers.forEach(f => { %>
+          <div class="h-scroll-item farmer-item">
+            <a href="/producator/<%= f.id %>" class="farmer-card">
+              <div class="farmer-photo">
+                <% if (f.avatar_url) { %>
+                  <img src="<%= f.avatar_url %>" alt="<%= f.name %>" loading="lazy">
+                <% } else { %>
+                  <span>👨‍🌾</span>
+                <% } %>
+              </div>
+              <div class="farmer-info">
+                <strong><%= f.name %></strong>
+                <small><%= f.county %></small>
+                <p><%= f.description ? f.description.slice(0, 60) + '…' : 'Producător local autentic.' %></p>
+                <% if (f.distanceLabel) { %><span class="chip chip-distance">🚗 la <%= f.distanceLabel %></span><% } %>
+              </div>
+            </a>
+          </div>
+        <% }) %>
+      </div>
+    </section>
+
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

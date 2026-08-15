@@ -1,0 +1,58 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <h1>Cumpărături</h1>
+    <p class="sub">Coșul tău cu produse românești</p>
+  </div>
+
+  <% if (items.length === 0) { %>
+    <div class="empty-state">
+      <p class="empty-emoji">🛒</p>
+      <h3>Coșul tău e gol</h3>
+      <p>Adaugă produse de la producătorii locali.</p>
+      <a href="/" class="btn btn-primary">Mergi la cumpărături</a>
+    </div>
+  <% } else { %>
+    <div class="cart-list">
+      <% items.forEach(it => { %>
+        <div class="cart-item" data-item="<%= it.id %>">
+          <div class="cart-thumb">
+            <% if (it.image_url) { %>
+              <img src="<%= it.image_url %>" alt="<%= it.name %>">
+            <% } else { %>
+              <span>🥬</span>
+            <% } %>
+          </div>
+          <div class="cart-info">
+            <a href="/producator/<%= it.producer_id %>" class="cart-producer">🏡 <%= it.producer_name %></a>
+            <strong><%= it.name %></strong>
+            <span class="cart-unit"><%= it.price.toFixed(2).replace('.', ',') %> lei / <%= it.unit %></span>
+          </div>
+          <div class="cart-right">
+            <div class="qty-control">
+              <button type="button" class="qty-btn" data-dec="<%= it.id %>">−</button>
+              <input type="number" class="qty-input" value="<%= it.qty %>" min="0" step="0.1" data-qty="<%= it.id %>" data-price="<%= it.price %>">
+              <button type="button" class="qty-btn" data-inc="<%= it.id %>">+</button>
+            </div>
+            <span class="cart-line-total" data-line="<%= it.id %>"><%= it.lineTotal %> lei</span>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="cart-summary">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <strong id="cartTotal"><%= total %> lei</strong>
+      </div>
+      <p class="cart-note">📦 Plasezi comanda direct la producător — apasă „Trimite comanda” și vei fi contactat pentru livrare sau ridicare.</p>
+      <button type="button" class="btn btn-primary btn-block" id="placeOrder">
+        Trimite comanda la producători
+      </button>
+      <button type="button" class="btn btn-ghost btn-block" id="clearCart">Golește coșul</button>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

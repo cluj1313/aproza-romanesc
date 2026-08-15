@@ -1,0 +1,168 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head dash-head">
+    <div>
+      <h1>Bine ai venit, <%= producer.owner_name || producer.name %>! 🌾</h1>
+      <p class="sub">Dashboard-ul fermei <%= producer.name %></p>
+    </div>
+  </div>
+
+  <% if (query.trimis) { %>
+    <div class="alert alert-success">✅ Notificarea a fost trimisă către <%= query.trimis %> clienți.</div>
+  <% } %>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-icon">📦</span>
+      <strong><%= stats.total %></strong>
+      <small>Total produse</small>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">✅</span>
+      <strong><%= stats.availableCount %></strong>
+      <small>Disponibile</small>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⭐</span>
+      <strong><%= stats.avg %></strong>
+      <small><%= stats.reviews %> recenzii</small>
+    </div>
+  </div>
+
+  <div class="quick-actions">
+    <a href="/produs/nou" class="qa-card">➕<strong>Adaugă produs</strong><small>Produs nou cu poză și preț</small></a>
+    <a href="/notificare-noua" class="qa-card">🌱<strong>Recoltare proaspătă</strong><small>Anunță clienții</small></a>
+    <a href="/anunt/nou" class="qa-card">📢<strong>Anunț nou</strong><small>Reduceri, oferte, concediu</small></a>
+    <a href="/profil" class="qa-card">🌾<strong>Profilul fermei</strong><small>Poze, locație, contact</small></a>
+  </div>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Produsele mele</h2>
+      <a href="/produs/nou" class="btn btn-primary btn-sm">+ Adaugă produs</a>
+    </div>
+    <% if (products.length === 0) { %>
+      <div class="empty-state small">
+        <p class="empty-emoji">📦</p>
+        <p>Nu ai adăugat încă niciun produs.</p>
+        <a href="/produs/nou" class="btn btn-primary btn-sm">Adaugă primul produs</a>
+      </div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Produs</th>
+              <th>Preț</th>
+              <th>Status</th>
+              <th class="th-actions">Acțiuni</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(pr => { %>
+              <tr>
+                <td>
+                  <div class="cell-product">
+                    <% if (pr.image_url) { %>
+                      <img src="<%= pr.image_url %>" alt="" class="thumb">
+                    <% } else { %>
+                      <span class="thumb fallback-thumb">🥬</span>
+                    <% } %>
+                    <div>
+                      <strong><%= pr.name %></strong>
+                      <small><%= pr.category %></small>
+                    </div>
+                  </div>
+                </td>
+                <td class="price"><%= pr.price.toFixed(2).replace('.', ',') %> lei / <%= pr.unit %></td>
+                <td>
+                  <% if (pr.available) { %><span class="status status-ok">Disponibil</span>
+                  <% } else { %><span class="status status-off">Indisponibil</span><% } %>
+                </td>
+                <td class="td-actions">
+                  <a href="/produs/<%= pr.id %>/editeaza" class="btn btn-ghost btn-sm">Editează</a>
+                  <form method="POST" action="/produs/<%= pr.id %>/sterge" class="inline-form" onsubmit="return confirm('Ștergi definitiv acest produs?')">
+                    <button type="submit" class="btn btn-danger btn-sm">Șterge</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Anunțurile mele</h2>
+      <a href="/anunt/nou" class="btn btn-ghost btn-sm">+ Anunț nou</a>
+    </div>
+    <% if (announcements.length === 0) { %>
+      <p class="sub">Niciun anunț activ. Anunță clienții despre reduceri sau oferte.</p>
+    <% } else { %>
+      <% announcements.forEach(ann => { %>
+        <div class="announcement-card ann-<%= ann.type %> list-item">
+          <div class="ann-info">
+            <strong><%= ann.title %></strong>
+            <% if (ann.percent) { %><span class="ann-percent">-<%= ann.percent %>%</span><% } %>
+            <% if (ann.message) { %><p><%= ann.message %></p><% } %>
+          </div>
+          <div class="ann-actions">
+            <% if (ann.active) { %>
+              <form method="POST" action="/anunt/<%= ann.id %>/featured" class="inline-form">
+                <button type="submit" class="btn btn-sm <%= ann.featured ? 'btn-featured' : 'btn-ghost' %>">
+                  <%= ann.featured ? '⭐ Pe cardul principal' : '☆ Pune pe cardul principal' %>
+                </button>
+              </form>
+            <% } %>
+            <% if (ann.active) { %>
+              <form method="POST" action="/anunt/<%= ann.id %>/dezactiveaza" class="inline-form">
+                <button type="submit" class="btn btn-ghost btn-sm">Dezactivează</button>
+              </form>
+            <% } %>
+            <form method="POST" action="/anunt/<%= ann.id %>/sterge" class="inline-form" onsubmit="return confirm('Ștergi anunțul?')">
+              <button type="submit" class="btn btn-danger btn-sm">Șterge</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    <% } %>
+  </section>
+
+  <section class="panel" id="recenzii">
+    <div class="panel-head">
+      <h2>Recenzii primite</h2>
+      <span class="rating-badge">⭐ <%= stats.avg %> · <%= stats.reviews %></span>
+    </div>
+    <% if (pendingReviews.length === 0) { %>
+      <p class="sub">Nicio recenzie încă. Clienții tăi vor putea lăsa review-uri și tu vei putea răspunde.</p>
+    <% } else { %>
+      <% pendingReviews.forEach(r => { %>
+        <div class="review-item">
+          <div class="review-head">
+            <span class="review-avatar"><%= r.user_name.charAt(0).toUpperCase() %></span>
+            <div>
+              <strong><%= r.user_name %></strong>
+              <span class="review-stars">
+                <% for (let s = 1; s <= 5; s++) { %><span class="star <%= s <= r.rating ? 'on' : '' %>">★</span><% } %>
+              </span>
+            </div>
+          </div>
+          <% if (r.comment) { %><p class="review-comment"><%= r.comment %></p><% } %>
+          <% if (r.reply) { %>
+            <div class="review-reply"><strong>Răspunsul tău:</strong><p><%= r.reply %></p></div>
+          <% } else { %>
+            <form method="POST" action="/review/<%= r.id %>/raspunde" class="reply-form">
+              <input type="text" name="reply" placeholder="Răspunde clientului…" required>
+              <button type="submit" class="btn btn-primary btn-sm">Răspunde</button>
+            </form>
+          <% } %>
+        </div>
+      <% }) %>
+    <% } %>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

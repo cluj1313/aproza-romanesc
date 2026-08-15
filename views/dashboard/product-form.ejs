@@ -1,0 +1,84 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <a href="/dashboard" class="back-link">← Înapoi la dashboard</a>
+    <h1><%= product ? 'Editează produsul' : 'Adaugă produs nou' %></h1>
+  </div>
+
+  <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+  <% if (uploadError) { %><div class="alert alert-error"><%= uploadError %></div><% } %>
+
+  <form method="POST" action="<%= product ? '/produs/' + product.id + '/editeaza' : '/produs/nou' %>" enctype="multipart/form-data" class="form panel">
+    <label>
+      <span>Numele produsului *</span>
+      <input type="text" name="name" required value="<%= product ? product.name : '' %>" placeholder="ex. Miere de salcâm">
+    </label>
+    <label>
+      <span>Descriere</span>
+      <textarea name="description" rows="3" placeholder="Origine, mod de producție…"><%= product ? product.description : '' %></textarea>
+    </label>
+
+    <div class="form-row">
+      <label>
+        <span>Preț (lei) *</span>
+        <input type="number" step="0.01" min="0" name="price" required value="<%= product ? product.price : '' %>" placeholder="ex. 25.00">
+      </label>
+      <label>
+        <span>Cantitate / unitate</span>
+        <select name="unit">
+          <% ['kg', 'g', 'L', 'ml', 'buc', 'legătură', 'căpățână', 'borcan', 'pachet', 'pungă', 'cui', 'zece', 'litru'].forEach(u => { %>
+            <option value="<%= u %>" <%= product && product.unit === u ? 'selected' : '' %>><%= u %></option>
+          <% }) %>
+        </select>
+      </label>
+      <label>
+        <span>Categorie</span>
+        <select name="category">
+          <% categories.forEach(c => { %>
+            <option value="<%= c %>" <%= product && product.category === c ? 'selected' : '' %>><%= c %></option>
+          <% }) %>
+        </select>
+      </label>
+    </div>
+
+    <label class="upload-label">
+      <span>Poza produsului (din galerie)</span>
+      <input type="file" name="image" accept="image/*" class="file-input">
+      <div class="file-preview">
+        <% if (product && product.image_url) { %>
+          <img src="<%= product.image_url %>" alt="Poza produsului">
+        <% } else { %>
+          <span>➕ Alege o poză din galerie</span>
+        <% } %>
+      </div>
+    </label>
+
+    <% if (product) { %>
+      <label class="checkbox">
+        <input type="checkbox" name="available" value="1" <%= product.available ? 'checked' : '' %>>
+        <span>Produsul este disponibil pentru clienți</span>
+      </label>
+    <% } %>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary"><%= product ? 'Salvează modificările' : 'Publică produsul' %></button>
+      <a href="/dashboard" class="btn btn-ghost">Anulează</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.querySelectorAll('.file-input').forEach(input => {
+    input.addEventListener('change', () => {
+      const preview = input.closest('.upload-label').querySelector('.file-preview img, .file-preview span');
+      if (input.files && input.files[0] && preview) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(input.files[0]);
+        preview.replaceWith(img);
+      }
+    });
+  });
+</script>
+
+<%- include('../partials/footer') %>
