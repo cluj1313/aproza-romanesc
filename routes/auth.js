@@ -123,12 +123,20 @@ function randomCode() {
   return String(Math.floor(100000 + Math.random() * 900000));
 }
 
+// 0720123123 -> 40720123123 (wa.me folosește format internațional, fără +)
+function toInternationalPhone(phone) {
+  const digits = String(phone || '').replace(/\D/g, '');
+  if (digits.startsWith('40')) return digits;
+  if (digits.startsWith('0')) return '40' + digits.slice(1);
+  return digits;
+}
+
 router.post('/recuperare', (req, res) => {
   const identifier = String(req.body.identifier || '').trim();
   const chosenMethod = req.body.method === 'sms' ? 'sms' : 'email';
-  const render = (error, info, demo) => res.render('auth/forgot', {
+  const render = (error, info, demo, whatsappLink) => res.render('auth/forgot', {
     title: 'Recuperare parolă',
-    error, info, demo,
+    error, info, demo, whatsappLink,
     form: { identifier }
   });
 
@@ -160,6 +168,11 @@ router.post('/recuperare', (req, res) => {
   db.prepare('INSERT INTO password_resets (user_id, code, method, expires_at) VALUES (?, ?, ?, ?)')
     .run(user.id, code, finalMethod, expires);
 
+  // Link gratuit: utilizatorul își trimite singur codul pe WhatsApp (wa.me + număr internațional).
+  const waPhone = toInternationalPhone(user.phone);
+  const waText = 'Codul meu de recuperare Aprozar Românesc: ' + code;
+  const waLink = 'https://wa.me/' + waPhone + '?text=' + encodeURIComponent(waText);
+
   const message = 'Codul tău de recuperare Aprozar Românesc: ' + code + '. Valabil 15 minute. Dacă nu ai cerut tu, ignoră acest mesaj.';
   const sendPromise = finalMethod === 'email'
     ? sendEmail(realEmail, 'Recuperare parolă Aprozar Românesc', message)
@@ -167,13 +180,13 @@ router.post('/recuperare', (req, res) => {
 
   sendPromise.then(result => {
     if (result.ok) {
-      return render(null, 'Ți-am trimis codul pe ' + (finalMethod === 'email' ? 'email' : 'numărul de telefon') + '.', null);
+      return render(null, 'Ți-am trimis codul pe ' + (finalMethod === 'email' ? 'email' : 'numărul de telefon') + '.', null, null);
     }
-    // Mod demo: fără SMTP/gateway configurat, arătăm codul direct pe ecran.
+    // Mod demo: fără SMTP/gateway configurat, arătăm codul direct pe ecran + opțiunea WhatsApp.
     if (result.demo) {
-      return render(null, 'Mod demo (fără SMTP/gateway configurat):', 'Codul tău este: ' + code);
+      return render(null, 'Mod demo (fără SMTP/gateway configurat):', 'Codul tău este: ' + code, waLink);
     }
-    render('Nu am putut trimite codul. Încearcă din nou sau contactează-ne. Detalii: ' + result.reason, null, null);
+    render('Nu am putut trimite codul. Încearcă din nou sau contactează-ne. Detalii: ' + result.reason, null, null, null);
   });
 });
 

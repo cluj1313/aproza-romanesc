@@ -177,6 +177,8 @@ img { display: block; max-width: 100%; }
 .btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
 .btn-ghost:hover { background: var(--green-light); border-color: var(--green); }
 .btn-danger { background: #fdecea; color: var(--red); border: 1.5px solid #f5c6c0; }
+.btn-wa { background: var(--wa); color: #fff; }
+.btn-wa:hover { background: var(--wa-dark); }
 .btn-danger:hover { background: var(--red); color: #fff; }
 .btn-featured { background: var(--orange); color: #fff; border: 1.5px solid var(--orange); }
 .btn-featured:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
@@ -1276,8 +1278,8 @@ img { display: block; max-width: 100%; }
   color: var(--green-dark);
 }
 .qty-btn:hover { background: var(--green-light); }
-.qty-input { width: 44px; border: none; background: transparent; text-align: center; font-family: inherit; font-size: 14px; font-weight: 700; }
-.cart-line-total { font-size: 14px; font-weight: 800; color: var(--green-dark); }
+.qty-input { width: 44px; border: none; background: transparent; text-align: center; font-family: inherit; font-size: 15px; font-weight: 800; color: var(--text); }
+.cart-line-total { font-size: 15px; font-weight: 800; color: var(--green-dark); background: var(--green-light); padding: 4px 10px; border-radius: 8px; }
 
 .cart-summary {
   margin-top: 16px;
@@ -1729,6 +1731,7 @@ body.dark-green-mode {
 }
 .img-lightbox-close:hover { background: rgba(255, 255, 255, 0.35); }
 .cultivator-avatar { cursor: pointer; }
+.cart-thumb img, .pcard-img img { cursor: zoom-in; }
 
 /* ---------- Responsive (desktop) ---------- */
 @media (min-width: 501px) {

@@ -10,7 +10,13 @@
 
     <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
     <% if (info) { %><div class="alert alert-info"><%= info %></div><% } %>
-    <% if (demo) { %><div class="alert alert-demo">🧪 <%= demo %></div><% } %>
+    <% if (demo) { %>
+      <div class="alert alert-demo">🧪 <%= demo %></div>
+      <% if (whatsappLink) { %>
+        <a href="<%= whatsappLink %>" target="_blank" rel="noopener" class="btn btn-wa btn-block">Trimite-mi codul pe WhatsApp</a>
+        <p class="auth-sub">Apasă butonul, iar în WhatsApp trimite mesajul către tine (la numărul tău). Codul rămâne salvat în conversația ta.</p>
+      <% } %>
+    <% } %>
 
     <form method="POST" action="/recuperare" class="form">
       <label>
