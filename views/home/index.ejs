@@ -49,16 +49,28 @@
   <% if (filters.q || filters.category) { %>
     <div class="page-head">
       <h1><%= filters.category ? filters.category : 'Rezultate pentru „' + filters.q + '”' %></h1>
-      <p class="sub"><%= producers.length %> producători găsiți</p>
+      <p class="sub"><%= producers.length %> producători, <%= searchProducts.length %> produse găsite</p>
     </div>
-    <% if (producers.length === 0) { %>
+    <% if (producers.length === 0 && searchProducts.length === 0) { %>
       <div class="empty-state">
         <p class="empty-emoji">🔍</p>
         <h3>Nu am găsit nimic</h3>
         <p>Încearcă alt termen sau altă categorie.</p>
         <a href="/" class="btn btn-primary">Vezi tot</a>
       </div>
-    <% } else { %>
+    <% } %>
+    <% if (searchProducts.length > 0) { %>
+      <div class="section-head">
+        <h2>Produse</h2>
+      </div>
+      <div class="product-grid">
+        <% searchProducts.forEach(pr => { %><%- include('../partials/product-card', { pr }) %><% }) %>
+      </div>
+    <% } %>
+    <% if (producers.length > 0) { %>
+      <div class="section-head">
+        <h2>Producători</h2>
+      </div>
       <div class="producer-list">
         <% producers.forEach(p => { %><%- include('../partials/producer-card', { p }) %><% }) %>
       </div>

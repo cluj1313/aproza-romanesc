@@ -58,12 +58,20 @@ router.get('/', (req, res) => {
   const activeCategory = category || (q ? null : null);
 
   let producers = [];
+  let searchProducts = [];
   if (activeCategory) {
     producers = db.prepare(`
       SELECT DISTINCT p.* FROM producers p
       JOIN products pr ON pr.producer_id = p.id
       WHERE pr.available = 1 AND pr.category = ?
       ORDER BY p.name COLLATE NOCASE
+    `).all(activeCategory);
+    searchProducts = db.prepare(`
+      SELECT pr.id, pr.name, pr.price, pr.unit, pr.image_url, pr.category,
+             p.id AS producer_id, p.name AS producer_name, p.county, p.locality, p.owner_name
+      FROM products pr JOIN producers p ON p.id = pr.producer_id
+      WHERE pr.available = 1 AND pr.category = ?
+      ORDER BY pr.name COLLATE NOCASE
     `).all(activeCategory);
   } else if (q) {
     const like = `%${String(q).trim()}%`;
@@ -72,6 +80,13 @@ router.get('/', (req, res) => {
       WHERE unaccent(p.name) LIKE unaccent(?) OR unaccent(p.locality) LIKE unaccent(?) OR unaccent(p.description) LIKE unaccent(?) OR unaccent(p.owner_name) LIKE unaccent(?)
       ORDER BY p.name COLLATE NOCASE
     `).all(like, like, like, like);
+    searchProducts = db.prepare(`
+      SELECT pr.id, pr.name, pr.price, pr.unit, pr.image_url, pr.category,
+             p.id AS producer_id, p.name AS producer_name, p.county, p.locality, p.owner_name
+      FROM products pr JOIN producers p ON p.id = pr.producer_id
+      WHERE pr.available = 1 AND (unaccent(pr.name) LIKE unaccent(?) OR unaccent(pr.description) LIKE unaccent(?))
+      ORDER BY pr.name COLLATE NOCASE
+    `).all(like, like);
   } else {
     producers = db.prepare('SELECT * FROM producers ORDER BY created_at ASC').all();
   }
@@ -128,6 +143,7 @@ router.get('/', (req, res) => {
     producerUserId: req.session.user ? req.session.user.id : null,
     categories: CATEGORIES,
     filters: { q: q || '', category: activeCategory || '' },
+    searchProducts,
     cartCount: base.count,
     hasLocation: loc.lat != null && loc.lng != null
   });
