@@ -1,0 +1,30 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="/images/logo.jpeg" alt="Aprozar Românesc">
+    </div>
+    <h1>Parolă nouă 🎉</h1>
+    <p class="auth-sub">Codul a fost verificat. Alege o parolă nouă (cel puțin 6 caractere).</p>
+
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+    <form method="POST" action="/recuperare/noua" class="form">
+      <input type="hidden" name="userId" value="<%= userId %>">
+      <label>
+        <span>Parolă nouă *</span>
+        <input type="password" name="password" required minlength="6" placeholder="••••••••" autofocus>
+      </label>
+      <label>
+        <span>Repetă parola *</span>
+        <input type="password" name="password2" required minlength="6" placeholder="••••••••">
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Salvează parola</button>
+    </form>
+
+    <p class="auth-alt"><a href="/login">Mă întorc la autentificare</a></p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

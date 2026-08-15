@@ -9,6 +9,7 @@
     <p class="auth-sub">Autentifică-te cu numărul de telefon.</p>
 
     <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <% if (reset) { %><div class="alert alert-success">Parola a fost schimbată. Autentifică-te cu noua parolă.</div><% } %>
 
     <form method="POST" action="/login" class="form">
       <input type="hidden" name="next" value="<%= next %>">
@@ -23,6 +24,7 @@
       <button type="submit" class="btn btn-primary btn-block">Autentificare</button>
     </form>
 
+    <p class="auth-alt"><a href="/recuperare">Am uitat parola</a></p>
     <p class="auth-alt">Nu ai cont? <a href="/register">Creează unul gratuit</a></p>
   </div>
 </div>

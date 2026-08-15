@@ -116,6 +116,16 @@ CREATE TABLE IF NOT EXISTS order_items (
   qty REAL NOT NULL DEFAULT 1,
   image_url TEXT NOT NULL DEFAULT ''
 );
+
+CREATE TABLE IF NOT EXISTS password_resets (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  code TEXT NOT NULL,
+  method TEXT NOT NULL DEFAULT 'email',
+  expires_at TEXT NOT NULL,
+  used INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 `);
 
 module.exports = db;

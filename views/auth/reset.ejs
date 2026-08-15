@@ -1,0 +1,26 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="/images/logo.jpeg" alt="Aprozar Românesc">
+    </div>
+    <h1>Introdu codul 🔢</h1>
+    <p class="auth-sub">Ți-am trimis un cod de 6 cifre<% if (phoneMasked) { %> pe numărul <%= phoneMasked %><% } %>. Valabil 15 minute.</p>
+
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+
+    <form method="POST" action="/recuperare/cod" class="form">
+      <input type="hidden" name="userId" value="<%= userId %>">
+      <label>
+        <span>Codul primit *</span>
+        <input type="text" name="code" required placeholder="000000" maxlength="6" autofocus>
+      </label>
+      <button type="submit" class="btn btn-primary btn-block">Verifică codul</button>
+    </form>
+
+    <p class="auth-alt"><a href="/recuperare">Nu ai primit codul? Solicită altul</a></p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

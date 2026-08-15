@@ -1,0 +1,38 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <img src="/images/logo.jpeg" alt="Aprozar Românesc">
+    </div>
+    <h1>Recuperare parolă 🔑</h1>
+    <p class="auth-sub">Introdu numărul de telefon sau adresa de email a contului tău. Alege cum vrei să primești codul.</p>
+
+    <% if (error) { %><div class="alert alert-error"><%= error %></div><% } %>
+    <% if (info) { %><div class="alert alert-info"><%= info %></div><% } %>
+    <% if (demo) { %><div class="alert alert-demo">🧪 <%= demo %></div><% } %>
+
+    <form method="POST" action="/recuperare" class="form">
+      <label>
+        <span>Telefon sau email *</span>
+        <input type="text" name="identifier" required placeholder="07xx xxx xxx sau email" value="<%= form.identifier %>" autofocus>
+      </label>
+      <fieldset class="form-group">
+        <legend>Metodă de primire a codului</legend>
+        <label class="radio-row">
+          <input type="radio" name="method" value="email" checked>
+          <span><strong>Email — gratuit</strong><br><small>Îți trimitem codul pe adresa de email a contului.</small></span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="method" value="sms">
+          <span><strong>SMS — poate implica costul unui mesaj</strong><br><small>Îl primești pe numărul tău de telefon, conform tarifelor operatorului tău.</small></span>
+        </label>
+      </fieldset>
+      <button type="submit" class="btn btn-primary btn-block">Trimite codul</button>
+    </form>
+
+    <p class="auth-alt">Ai scris parola? <a href="/login">Autentifică-te</a></p>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
