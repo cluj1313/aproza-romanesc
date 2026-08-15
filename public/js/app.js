@@ -321,7 +321,7 @@
     lbClose.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
-    document.querySelectorAll('.cultivator-avatar img, .cult-hero-avatar img, .cart-thumb img, .pcard-img img').forEach(av => {
+    document.querySelectorAll('.cultivator-avatar img, .cult-hero-avatar img, .cart-thumb img, .pcard-img img, .cult-product img, .cult-hero-cover img').forEach(av => {
       av.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
