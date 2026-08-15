@@ -222,14 +222,30 @@
     filterToggle.addEventListener('click', () => filterDrawer.classList.toggle('hidden'));
   }
 
-  /* ---------- Share prin WhatsApp ---------- */
-  const shareWaBtn = document.getElementById('shareWa');
-  if (shareWaBtn) {
-    shareWaBtn.addEventListener('click', () => {
+  /* ---------- Distribuie aplicația (share nativ + fallback) ---------- */
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', async () => {
       const pageUrl = window.location.href;
-      const text = 'Aprozar Românesc — produse 100% românești, direct de la țară: ' + pageUrl;
-      const waUrl = 'https://wa.me/?text=' + encodeURIComponent(text);
-      window.open(waUrl, '_blank', 'noopener,noreferrer');
+      const text = 'Aprozar Românesc — produse 100% românești, direct de la țară';
+      const data = { title: 'Aprozar Românesc', text, url: pageUrl };
+      if (navigator.share) {
+        try {
+          await navigator.share(data);
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return;
+        }
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(text + ' ' + pageUrl);
+          if (window.toast) window.toast('Link copiat în clipboard');
+          else alert('Link copiat în clipboard');
+          return;
+        } catch (err) {}
+      }
+      window.open('mailto:?subject=' + encodeURIComponent(data.title) + '&body=' + encodeURIComponent(text + ' ' + pageUrl), '_blank');
     });
   }
 
