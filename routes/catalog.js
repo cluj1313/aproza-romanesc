@@ -69,7 +69,7 @@ router.get('/', (req, res) => {
     const like = `%${String(q).trim()}%`;
     producers = db.prepare(`
       SELECT p.* FROM producers p
-      WHERE p.name LIKE ? OR p.locality LIKE ? OR p.description LIKE ? OR p.owner_name LIKE ?
+      WHERE unaccent(p.name) LIKE unaccent(?) OR unaccent(p.locality) LIKE unaccent(?) OR unaccent(p.description) LIKE unaccent(?) OR unaccent(p.owner_name) LIKE unaccent(?)
       ORDER BY p.name COLLATE NOCASE
     `).all(like, like, like, like);
   } else {
@@ -159,13 +159,13 @@ router.get('/cauta', (req, res) => {
   if (q) {
     results.producers = withDistance(db.prepare(`
       SELECT p.* FROM producers p
-      WHERE p.name LIKE ? OR p.locality LIKE ? OR p.description LIKE ? OR p.owner_name LIKE ?
+      WHERE unaccent(p.name) LIKE unaccent(?) OR unaccent(p.locality) LIKE unaccent(?) OR unaccent(p.description) LIKE unaccent(?) OR unaccent(p.owner_name) LIKE unaccent(?)
     `).all(like, like, like, like), loc.lat, loc.lng);
     results.producers = decorateProducer(results.producers);
     results.products = db.prepare(`
       SELECT pr.*, p.id AS producer_id, p.name AS producer_name, p.county
       FROM products pr JOIN producers p ON p.id = pr.producer_id
-      WHERE pr.available = 1 AND (pr.name LIKE ? OR pr.description LIKE ?)
+      WHERE pr.available = 1 AND (unaccent(pr.name) LIKE unaccent(?) OR unaccent(pr.description) LIKE unaccent(?))
     `).all(like, like);
   }
 

@@ -11,6 +11,15 @@ if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 const db = new Database(path.join(dataDir, 'aprozar-romanesc.db'));
 db.pragma('journal_mode = WAL');
 
+// Funcție SQL pentru căutare fără diacritice: 'rosii' găsește 'Roșii'
+db.function('unaccent', (s) => {
+  if (s == null) return s;
+  return String(s)
+    .toLowerCase()
+    .replace(/ă/g, 'a').replace(/â/g, 'a').replace(/î/g, 'i')
+    .replace(/ș/g, 's').replace(/ş/g, 's').replace(/ț/g, 't').replace(/ţ/g, 't');
+});
+
 db.exec(`
 CREATE TABLE IF NOT EXISTS users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

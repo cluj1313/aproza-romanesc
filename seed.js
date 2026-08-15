@@ -170,4 +170,33 @@ function seed() {
   console.log('Conturi demo: ferma1@exemplu.ro / client@exemplu.ro · parola: parola123');
 }
 
+// Completează produsele demo lipsă la fiecare pornire (baze de date deja populate).
+// Asigură ca fiecare categorie să aibă cel puțin produsele demo de mai jos.
+const EXTRA_PRODUCTS = [
+  ['Moara de Piatră', 'Făină integrală de grâu', 'Măcinată la piatră, fără aditivi, ideală pentru pâine de casă.', 5.50, 'kg', 'Cereale', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=60'],
+  ['Moara de Piatră', 'Mălai de porumb', 'Mălai fin, din porumb românesc, pentru mămăligă și mălai dulce.', 6.00, 'kg', 'Cereale', 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=60'],
+  ['Gospodăria lui Mitu', 'Ouă de prepeliță', 'Ouă mici de prepeliță, bogate în nutrienți, crescute în aer liber.', 2.50, 'buc', 'Altele', 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400&q=60'],
+  ['Gospodăria lui Mitu', 'Zacuscă de casă', 'Zacuscă de vinete cu gogoșari, rețetă de familie, fără conservanți.', 16.00, 'borcan', 'Conserve și murături', 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&q=60'],
+  ['Raiul Plantei', 'Sare de baie cu lavandă', 'Sare naturală cu lavandă, pentru relaxare, făcută manual.', 14.00, 'pachet', 'Altele', 'https://images.unsplash.com/photo-1564540586988-aa4e53c7a87f?w=400&q=60']
+];
+
+function seedMissingProducts() {
+  const insertProduct = db.prepare(
+    'INSERT INTO products (producer_id, name, description, price, unit, category, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)'
+  );
+  const exists = db.prepare('SELECT id FROM products WHERE name = ?');
+  let added = 0;
+
+  EXTRA_PRODUCTS.forEach(([producerName, name, description, price, unit, category, image_url]) => {
+    if (exists.get(name)) return;
+    const producer = db.prepare('SELECT id FROM producers WHERE name = ?').get(producerName);
+    if (!producer) return;
+    insertProduct.run(producer.id, name, description, price, unit, category, image_url);
+    added++;
+  });
+
+  if (added) console.log(`Produse demo completate: +${added}`);
+}
+
 seed();
+seedMissingProducts();
