@@ -552,6 +552,7 @@ img { display: block; max-width: 100%; }
   text-decoration: none;
   color: var(--text);
   height: 100%;
+  justify-content: flex-start;
 }
 .farmer-card:hover { border-color: var(--green); box-shadow: var(--shadow); }
 .farmer-photo {
@@ -570,7 +571,15 @@ img { display: block; max-width: 100%; }
 .farmer-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; align-items: center; }
 .farmer-info strong { font-size: 14px; font-family: 'Suez One', Georgia, 'Times New Roman', serif; font-weight: 400; }
 .farmer-info small { color: var(--muted); font-size: 11.5px; }
-.farmer-info p { font-size: 11.5px; color: var(--muted); line-height: 1.4; }
+.farmer-info p {
+  font-size: 11.5px;
+  color: var(--muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 
 /* ---------- Cel mai apropiat cultivator ---------- */
 .cultivator-list { display: flex; flex-direction: column; gap: 12px; }
@@ -580,7 +589,7 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--border);
-  height: 130px;
+  min-height: 130px;
 }
 .cultivator-reviews-toggle {
   position: absolute;
@@ -1711,8 +1720,11 @@ body.dark-green-mode {
 .img-lightbox[hidden] { display: none; }
 .img-lightbox-box { position: relative; max-width: 100%; max-height: 100%; }
 .img-lightbox-box img {
+  min-width: min(70vw, 340px);
+  min-height: min(50vh, 340px);
   max-width: 100%;
   max-height: 88vh;
+  object-fit: contain;
   border-radius: 14px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
