@@ -13,9 +13,12 @@
 
   /* Dacă am locația salvată în browser, dar serverul a pierdut-o (restart),
      o restabilim automat, fără să mai cerem permisiunea. */
+  function hasLocationCookie() {
+    return document.cookie.split(';').some(c => c.trim().startsWith('aprozar_loc='));
+  }
   const locateCultivatorsBtn = document.getElementById('locateCultivators');
   const locateStoresBtn = document.getElementById('locateStores');
-  if ((locateCultivatorsBtn || locateStoresBtn) && typeof localStorage !== 'undefined') {
+  if ((locateCultivatorsBtn || locateStoresBtn) && typeof localStorage !== 'undefined' && !hasLocationCookie()) {
     try {
       const saved = localStorage.getItem('aprozar-loc');
       if (saved) {

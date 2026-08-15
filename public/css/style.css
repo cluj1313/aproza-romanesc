@@ -221,7 +221,7 @@ img { display: block; max-width: 100%; }
 .ddc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .ddc-result {
   margin-top: 12px;
-  background: #fff;
+  background: var(--surface);
   color: var(--text);
   border-radius: 12px;
   padding: 12px 14px;
