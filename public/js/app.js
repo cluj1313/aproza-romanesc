@@ -252,6 +252,27 @@
     });
   }
 
+  /* ---------- Mărimea textului (A− / A+) ---------- */
+  const tsMinus = document.getElementById('tsMinus');
+  const tsPlus = document.getElementById('tsPlus');
+  const tsLabel = document.getElementById('tsLabel');
+  if (tsMinus && tsPlus) {
+    const FS_KEY = 'aprozar-fs';
+    const LEVELS = [0.9, 1, 1.15, 1.3];
+    let idx = LEVELS.indexOf(parseFloat(localStorage.getItem(FS_KEY) || '1'));
+    if (idx < 0) idx = 1;
+    function applyFs(i) {
+      const v = LEVELS[i];
+      document.documentElement.style.setProperty('--fs', String(v));
+      tsMinus.disabled = i === 0;
+      tsPlus.disabled = i === LEVELS.length - 1;
+      try { localStorage.setItem(FS_KEY, String(v)); } catch (e) { /* ignore */ }
+    }
+    tsMinus.addEventListener('click', () => { if (idx > 0) applyFs(--idx); });
+    tsPlus.addEventListener('click', () => { if (idx < LEVELS.length - 1) applyFs(++idx); });
+    applyFs(idx);
+  }
+
   /* ---------- Fundal verde închis ---------- */
   const themeToggle = document.getElementById('themeToggle');
   const appShell = document.querySelector('.app-shell');
