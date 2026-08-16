@@ -412,4 +412,84 @@
       }
     });
   }
+
+  /* ---------- Organizare categorii (alfabetic / fixate sus) ---------- */
+  const catGrid = document.getElementById('catGrid');
+  if (catGrid) {
+    const SORT_KEY = 'aprozar-cat-sort';
+    const PIN_KEY = 'aprozar-cat-pins';
+    const sortToggle = document.getElementById('catSortToggle');
+    const pinHint = document.getElementById('catPinHint');
+
+    function readPins() {
+      try {
+        const pins = JSON.parse(localStorage.getItem(PIN_KEY) || '[]');
+        return Array.isArray(pins) ? pins : [];
+      } catch (e) { return []; }
+    }
+    function savePins(pins) {
+      try { localStorage.setItem(PIN_KEY, JSON.stringify(pins)); } catch (e) { /* ignore */ }
+    }
+    function currentSort() {
+      return localStorage.getItem(SORT_KEY) === 'alpha' ? 'alpha' : 'pin';
+    }
+
+    function render() {
+      const cards = Array.from(catGrid.querySelectorAll('.cat-grid-card'));
+      const sort = currentSort();
+      const pins = readPins();
+
+      sortToggle.querySelectorAll('.cat-sort-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.sort === sort);
+      });
+      pinHint.style.display = sort === 'pin' ? '' : 'none';
+
+      cards.forEach(card => {
+        const isPinned = pins.includes(card.dataset.cat);
+        card.classList.toggle('pinned', isPinned);
+        const btn = card.querySelector('.cat-pin-btn');
+        btn.classList.toggle('pinned', isPinned);
+        btn.title = isPinned ? 'De-fixează' : 'Fixează sus';
+      });
+
+      if (sort === 'alpha') {
+        cards.sort((a, b) => a.dataset.cat.localeCompare(b.dataset.cat, 'ro'));
+      } else {
+        cards.sort((a, b) => {
+          const pa = pins.indexOf(a.dataset.cat);
+          const pb = pins.indexOf(b.dataset.cat);
+          if (pa === -1 && pb === -1) return 0;
+          if (pa === -1) return 1;
+          if (pb === -1) return -1;
+          return pa - pb;
+        });
+      }
+      cards.forEach(card => catGrid.appendChild(card));
+    }
+
+    catGrid.addEventListener('click', (e) => {
+      const btn = e.target.closest('.cat-pin-btn');
+      if (!btn) return;
+      const name = btn.dataset.pin;
+      const pins = readPins();
+      const idx = pins.indexOf(name);
+      if (idx === -1) pins.push(name); else pins.splice(idx, 1);
+      savePins(pins);
+      if (currentSort() !== 'pin') localStorage.setItem(SORT_KEY, 'pin');
+      render();
+      pinHint.classList.add('shown');
+      pinHint.textContent = idx === -1
+        ? '✅ „' + name + '" e fixată sus'
+        : '„' + name + '" a fost de-fixată';
+    });
+
+    sortToggle.addEventListener('click', (e) => {
+      const btn = e.target.closest('.cat-sort-btn');
+      if (!btn) return;
+      localStorage.setItem(SORT_KEY, btn.dataset.sort);
+      render();
+    });
+
+    render();
+  }
 })();

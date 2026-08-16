@@ -6,17 +6,29 @@
     <p class="sub">Ce vrei să cumperi astăzi?</p>
   </div>
 
-  <div class="cat-grid">
+  <div class="cat-toolbar">
+    <span class="cat-toolbar-label">Organizare:</span>
+    <div class="cat-sort-toggle" id="catSortToggle" role="group" aria-label="Organizare categorii">
+      <button type="button" class="cat-sort-btn" data-sort="alpha">Alfabetic</button>
+      <button type="button" class="cat-sort-btn" data-sort="pin">Fixate sus</button>
+    </div>
+    <button type="button" class="cat-pin-hint" id="catPinHint">📌 Apasă 📌 pe o categorie ca să o ții sus</button>
+  </div>
+
+  <div class="cat-grid" id="catGrid">
     <% categories.forEach(c => { %>
-      <a href="/?category=<%= encodeURIComponent(c.name) %>" class="cat-grid-card" style="--cat-color:<%= c.color %>">
-        <div class="cat-grid-img">
-          <img src="<%= c.image %>" alt="<%= c.name %>" loading="lazy" onerror="this.outerHTML='<span class=&quot;cat-icon-big&quot;><%= c.icon %></span>'">
-        </div>
-        <div class="cat-grid-info">
-          <strong><%= c.icon %> <%= c.name %></strong>
-          <small><%= c.count %> produse</small>
-        </div>
-      </a>
+      <div class="cat-grid-card" data-cat="<%= c.name %>" style="--cat-color:<%= c.color %>">
+        <a href="/?category=<%= encodeURIComponent(c.name) %>" class="cat-grid-link">
+          <div class="cat-grid-img">
+            <img src="<%= c.image %>" alt="<%= c.name %>" loading="lazy" onerror="this.outerHTML='<span class=&quot;cat-icon-big&quot;><%= c.icon %></span>'">
+          </div>
+          <div class="cat-grid-info">
+            <strong><%= c.icon %> <%= c.name %></strong>
+            <small><%= c.count %> produse</small>
+          </div>
+        </a>
+        <button type="button" class="cat-pin-btn" data-pin="<%= c.name %>" aria-label="Fixează <%= c.name %> sus" title="Fixează sus">📌</button>
+      </div>
     <% }) %>
   </div>
 </div>
