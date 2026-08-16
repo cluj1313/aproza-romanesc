@@ -152,6 +152,15 @@ router.post('/produs/nou', producerOnly, single('image'), (req, res) => {
   res.redirect('/dashboard');
 });
 
+router.post('/poveste', producerOnly, (req, res) => {
+  const producer = getProducerFor(req.session.user.id);
+  if (!producer) return res.status(404).json({ ok: false, error: 'Profil de producător lipsă.' });
+  const story = String(req.body.story || '').trim();
+  if (!story) return res.status(400).json({ ok: false, error: 'Povestea nu poate fi goală.' });
+  db.prepare('UPDATE producers SET description = ? WHERE id = ?').run(story.slice(0, 600), producer.id);
+  res.json({ ok: true, story: story.slice(0, 600) });
+});
+
 router.get('/produs/:id/editeaza', producerOnly, (req, res) => {
   const producer = getProducerFor(req.session.user.id);
   const product = db.prepare('SELECT * FROM products WHERE id = ? AND producer_id = ?').get(req.params.id, producer.id);

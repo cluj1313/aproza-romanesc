@@ -210,7 +210,9 @@ img { display: block; max-width: 100%; }
   position: relative;
   margin: 0 0 12px;
   width: 100%;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.65)), url('/images/ddc-banner.jpeg') center / cover no-repeat;
+  background:
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.7)),
+    url('/images/flag-romania.jpg') center / cover no-repeat;
   border-radius: 16px;
   padding: 14px 16px 16px;
   color: #fff;
@@ -659,6 +661,60 @@ img { display: block; max-width: 100%; }
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Adaugă povestea ta (producători) */
+.story-add { margin-top: 14px; }
+.story-add-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: calc(14px * var(--fs, 1));
+  font-weight: 700;
+  color: var(--text);
+  background: var(--surface);
+  border: 1.5px dashed var(--green);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.story-add-toggle:hover { background: var(--green-light); border-color: var(--green); }
+.story-add-plus {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-size: calc(18px * var(--fs, 1));
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.story-add-toggle.open .story-add-plus { background: var(--green-dark); }
+.story-add-box {
+  margin-top: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.story-add-box textarea {
+  font: inherit;
+  font-weight: 400;
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+  resize: vertical;
+}
+.story-add-box textarea:focus { outline: 2px solid var(--green); border-color: transparent; }
+.story-add-box .pa-actions { margin-top: 12px; }
 
 /* ---------- Cel mai apropiat cultivator ---------- */
 .cultivator-list { display: flex; flex-direction: column; gap: 12px; }
@@ -1749,64 +1805,64 @@ img { display: block; max-width: 100%; }
 body.dark-green-mode {
   --text: #e6f0e8;
   --muted: #a7c1ac;
-  --surface: #1f4128;
-  --border: #2b5333;
-  --cream: #17301d;
-  --green-light: rgba(255, 255, 255, 0.1);
-  --green-dark: #8cc993;
-  background: #0f2414;
+  --surface: #2a5a35;
+  --border: #3c7447;
+  --cream: #1f4128;
+  --green-light: rgba(255, 255, 255, 0.12);
+  --green-dark: #9ed6a5;
+  background: #1a3a22;
   transition: background 0.25s ease;
 }
 .app-shell.dark-green {
   --text: #e6f0e8;
   --muted: #a7c1ac;
-  --surface: #1f4128;
-  --border: #2b5333;
-  --cream: #17301d;
-  --green-light: rgba(255, 255, 255, 0.1);
-  --green-dark: #8cc993;
-  background: #16331d;
+  --surface: #2a5a35;
+  --border: #3c7447;
+  --cream: #1f4128;
+  --green-light: rgba(255, 255, 255, 0.12);
+  --green-dark: #9ed6a5;
+  background: #20502b;
   transition: background 0.25s ease;
 }
 .app-shell.dark-green .btn-primary:hover,
 .app-shell.dark-green .add-btn:hover,
-.app-shell.dark-green .last-order-cta:hover { background: #2e6b35; }
-.app-shell.dark-green .pd-cover.fallback { background: linear-gradient(135deg, var(--green), #2e6b35); }
+.app-shell.dark-green .last-order-cta:hover { background: #3a7d46; }
+.app-shell.dark-green .pd-cover.fallback { background: linear-gradient(135deg, var(--green), #3a7d46); }
 .app-shell.dark-green .page-container { transition: background 0.25s ease; }
 .app-shell.dark-green .hero {
-  background: linear-gradient(135deg, #1e4a27 0%, #16331d 55%, #0d1f12 100%);
+  background: linear-gradient(135deg, #2a5a35 0%, #20502b 55%, #16331d 100%);
 }
 .app-shell.dark-green .ddc-card {
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.65)), url('/images/ddc-banner.jpeg') center / cover no-repeat;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.7)), url('/images/flag-romania.jpg') center / cover no-repeat;
 }
 .app-shell.dark-green .empty-state {
   background: var(--surface);
   color: var(--text);
 }
 .app-shell.dark-green .last-order-card,
-.app-shell.dark-green .last-order-item { background: #1f4128; border-color: #2b5333; }
+.app-shell.dark-green .last-order-item { background: #2a5a35; border-color: #3c7447; }
 .app-shell.dark-green .last-order-thumb,
 .app-shell.dark-green .last-order-avatar { background: rgba(255, 255, 255, 0.1); }
 .app-shell.dark-green .cultivator-card,
-.app-shell.dark-green .cultivator-reviews { background: #1f4128; border-color: #2b5333; }
+.app-shell.dark-green .cultivator-reviews { background: #2a5a35; border-color: #3c7447; }
 .app-shell.dark-green .cultivator-reviews-toggle { background: rgba(0, 0, 0, 0.55); }
 .app-shell.dark-green .cultivator-ann { background: var(--orange); }
 .app-shell.dark-green .cultivator-ann-text,
 .app-shell.dark-green .cultivator-ann-extra { color: #1a1a1a; }
 .app-shell.dark-green .cult-announcement p { color: #d7e8d8; }
-.app-shell.dark-green .cult-reviews-head { border-color: #2b5333; }
+.app-shell.dark-green .cult-reviews-head { border-color: #3c7447; }
 .app-shell.dark-green .cult-reviews-head strong { color: #d7e8d8; }
 .app-shell.dark-green .cult-reviews-close { color: #d7e8d8; }
 .app-shell.dark-green .cult-reviews-close:hover { background: rgba(255, 255, 255, 0.1); color: #fff; }
-.app-shell.dark-green .cult-review { border-color: #2b5333; }
-.app-shell.dark-green .cult-product { background: rgba(255, 255, 255, 0.06); border-color: #2b5333; }
+.app-shell.dark-green .cult-review { border-color: #3c7447; }
+.app-shell.dark-green .cult-product { background: rgba(255, 255, 255, 0.06); border-color: #3c7447; }
 .app-shell.dark-green .cult-product-info strong { color: #fff; }
 .app-shell.dark-green .cult-product-price { color: var(--gold); }
-.app-shell.dark-green .cult-product-more { color: #d7e8d8; border-color: #2b5333; }
+.app-shell.dark-green .cult-product-more { color: #d7e8d8; border-color: #3c7447; }
 .app-shell.dark-green .cult-product-more:hover { background: rgba(255, 255, 255, 0.08); }
 .app-shell.dark-green .cult-review p { color: #d7e8d8; }
 .app-shell.dark-green .cult-reply { background: rgba(255, 255, 255, 0.08); color: #d7e8d8; }
-.app-shell.dark-green .site-footer { background: #0d2412; }
+.app-shell.dark-green .site-footer { background: #16331d; }
 
 /* ---------- Modal autentificare rapidÄƒ ---------- */
 .modal-overlay {

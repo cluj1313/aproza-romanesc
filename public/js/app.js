@@ -635,4 +635,51 @@
       });
     }
   }
+
+  /* ---------- Adaugă povestea ta (producători) ---------- */
+  const storyToggle = document.getElementById('storyToggle');
+  const storyBox = document.getElementById('storyBox');
+  const storyText = document.getElementById('storyText');
+  const storySave = document.getElementById('storySave');
+  const storyStatus = document.getElementById('storyStatus');
+  if (storyToggle && storyBox) {
+    storyToggle.addEventListener('click', () => {
+      const open = !storyBox.classList.contains('hidden');
+      storyBox.classList.toggle('hidden', open);
+      storyToggle.classList.toggle('open', !open);
+      storyToggle.setAttribute('aria-expanded', String(!open));
+      if (!open && storyText) storyText.focus();
+    });
+    if (storySave && storyText && storyStatus) {
+      storySave.addEventListener('click', async () => {
+        const story = storyText.value.trim();
+        if (!story) { storyStatus.textContent = 'Scrie întâi povestea ta.'; storyStatus.className = 'pa-status pa-error'; return; }
+        storyStatus.textContent = 'Se salvează…';
+        storyStatus.className = 'pa-status';
+        storySave.disabled = true;
+        try {
+          const res = await fetch('/poveste', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+            body: new URLSearchParams({ story })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            storyStatus.textContent = '✅ Povestea ta a fost salvată!';
+            storyStatus.className = 'pa-status pa-ok';
+            storyBox.classList.add('hidden');
+            storyToggle.classList.remove('open');
+            storyToggle.setAttribute('aria-expanded', 'false');
+          } else {
+            storyStatus.textContent = data.error || 'Nu am putut salva povestea.';
+            storyStatus.className = 'pa-status pa-error';
+          }
+        } catch (e) {
+          storyStatus.textContent = 'A apărut o eroare. Încearcă din nou.';
+          storyStatus.className = 'pa-status pa-error';
+        }
+        storySave.disabled = false;
+      });
+    }
+  }
 })();
