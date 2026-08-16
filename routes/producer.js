@@ -125,24 +125,30 @@ router.post('/produs/nou', producerOnly, single('image'), (req, res) => {
   const { name, description, price, unit, category, available } = req.body;
   const imageUrl = req.file ? '/uploads/' + req.file.filename : '';
 
-  const fail = (error) => res.status(400).render('dashboard/product-form', {
-    title: 'Produs nou', producer,
-    categories: CATEGORY_NAMES,
-    product: { name, description, price, unit, category, image_url: imageUrl },
-    error, uploadError: req.uploadError, cartCount: cartSummary(req).count
-  });
+  const isJson = req.get('Accept') && req.get('Accept').includes('application/json');
+
+  const fail = (error) => {
+    if (isJson) return res.status(400).json({ ok: false, error });
+    return res.status(400).render('dashboard/product-form', {
+      title: 'Produs nou', producer,
+      categories: CATEGORY_NAMES,
+      product: { name, description, price, unit, category, image_url: imageUrl },
+      error, uploadError: req.uploadError, cartCount: cartSummary(req).count
+    });
+  };
 
   const numericPrice = parseFloat(price);
   if (!name) return fail('Numele produsului este obligatoriu.');
   if (isNaN(numericPrice) || numericPrice < 0) return fail('Prețul introdus nu este valid.');
   if (!CATEGORY_NAMES.includes(category)) return fail('Categoria selectată nu este validă.');
 
-  db.prepare(`
+  const result = db.prepare(`
     INSERT INTO products (producer_id, name, description, price, unit, category, image_url, available)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).run(producer.id, String(name).trim(), String(description || '').trim(), numericPrice,
     String(unit || 'kg').trim(), String(category), imageUrl, available ? 1 : 0);
 
+  if (isJson) return res.json({ ok: true, id: result.lastInsertRowid, name: String(name).trim() });
   res.redirect('/dashboard');
 });
 

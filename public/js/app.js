@@ -492,4 +492,129 @@
 
     render();
   }
+
+  /* ---------- Adaugă produs rapid (pagina principală) ---------- */
+  const producerAddToggle = document.getElementById('producerAddToggle');
+  const producerAddForm = document.getElementById('producerAddForm');
+  const paCategory = document.getElementById('paCategory');
+  const paProduct = document.getElementById('paProduct');
+  const paCustomWrap = document.getElementById('paCustomWrap');
+  const paCustomName = document.getElementById('paCustomName');
+  const paPrice = document.getElementById('paPrice');
+  const paUnit = document.getElementById('paUnit');
+  const paSubmit = document.getElementById('paSubmit');
+  const paStatus = document.getElementById('paStatus');
+
+  const PRODUCT_SUGGESTIONS = {
+    'Legume': ['Roșii', 'Castraveți', 'Ardei gras', 'Ardei iute', 'Salată verde', 'Spanac', 'Morcovi', 'Varză', 'Vinete', 'Dovlecei', 'Fasole verde', 'Mazăre', 'Ceapă verde', 'Usturoi', 'Pătrunjel', 'Mărar'],
+    'Cartofi și ceapă': ['Cartofi noi', 'Cartofi roșii', 'Cartofi galbeni', 'Ceapă roșie', 'Ceapă galbenă', 'Ceapă albă', 'Ceapă verde', 'Usturoi'],
+    'Fructe': ['Mere', 'Pere', 'Prune', 'Căpșuni', 'Zmeură', 'Afine', 'Cireșe', 'Vișine', 'Struguri', 'Caise', 'Piersici', 'Pepene roșu', 'Pepene galben', 'Gutui'],
+    'Lactate': ['Lapte de vacă', 'Lapte de capră', 'Telemea', 'Brânză de vaci', 'Cașcaval', 'Smântână', 'Iaurt', 'Urdă', 'Chefir', 'Unt'],
+    'Cereale': ['Grâu', 'Porumb', 'Ovăz', 'Secară', 'Orz', 'Făină de grâu', 'Făină de porumb', 'Mălai', 'Fulgi de ovăz'],
+    'Panificație': ['Pâine de casă', 'Pâine cu maia', 'Pâine integrală', 'Covrigi', 'Colaci', 'Cozonac', 'Plăcintă', 'Lipie', 'Chifle'],
+    'Miere și dulciuri': ['Miere de salcâm', 'Miere de tei', 'Miere polifloră', 'Propolis', 'Polen', 'Fagure', 'Ceară'],
+    'Dulcețuri': ['Dulceață de căpșuni', 'Dulceață de prune', 'Dulceață de zmeură', 'Dulceață de caise', 'Gem de fructe', 'Sirop'],
+    'Carne și ouă': ['Ouă de găină', 'Ouă de prepeliță', 'Piept de pui', 'Pulpă de porc', 'Carne tocată', 'Cârnați', 'Slănină', 'Pui întreg', 'Iepure', 'Curcan'],
+    'Pește': ['Păstrăv', 'Crap', 'Șalău', 'Somn', 'Sânger', 'Biban', 'Știucă', 'Creveți', 'Midii'],
+    'Conserve și murături': ['Murături asortate', 'Castraveți murați', 'Varză murată', 'Zacuscă', 'Gogoșari', 'Compot', 'Bulion', 'Roșii bulion', 'Gem conservat'],
+    'Băuturi naturale': ['Suc de mere', 'Suc de struguri', 'Must', 'Sirop de soc', 'Limonadă', 'Compot de fructe', 'Băutură din mentă'],
+    'Plante și ceaiuri': ['Mentă', 'Mușețel', 'Sunătoare', 'Lavandă', 'Cimbru', 'Rozmarin', 'Salvie', 'Tei', 'Urzici', 'Răsaduri'],
+    'Altele': ['Nuci', 'Semințe', 'Flori', 'Plante decorative', 'Răsaduri', 'Săpun natural']
+  };
+
+  if (producerAddToggle && producerAddForm) {
+    const chev = document.getElementById('producerAddChev');
+
+    producerAddToggle.addEventListener('click', () => {
+      const open = !producerAddForm.classList.contains('hidden');
+      producerAddForm.classList.toggle('hidden', open);
+      producerAddToggle.classList.toggle('open', !open);
+      producerAddToggle.setAttribute('aria-expanded', String(!open));
+      if (chev) chev.textContent = open ? '▾' : '▴';
+    });
+
+    if (paCategory && paProduct) {
+      paCategory.addEventListener('change', () => {
+        const cat = paCategory.value;
+        paProduct.innerHTML = '';
+        const first = document.createElement('option');
+        first.value = '';
+        first.textContent = cat ? 'Alege produsul…' : 'Mai întâi alege categoria';
+        paProduct.appendChild(first);
+        paProduct.disabled = !cat;
+
+        if (cat) {
+          (PRODUCT_SUGGESTIONS[cat] || []).forEach(name => {
+            const o = document.createElement('option');
+            o.value = name;
+            o.textContent = name;
+            paProduct.appendChild(o);
+          });
+          const custom = document.createElement('option');
+          custom.value = '__custom__';
+          custom.textContent = '✏️ Alt produs (scrie tu)';
+          paProduct.appendChild(custom);
+        }
+
+        paCustomWrap.classList.add('hidden');
+        paCustomName.value = '';
+      });
+
+      paProduct.addEventListener('change', () => {
+        const isCustom = paProduct.value === '__custom__';
+        paCustomWrap.classList.toggle('hidden', !isCustom);
+        if (isCustom) paCustomName.focus();
+      });
+    }
+
+    if (paSubmit && paStatus) {
+      paSubmit.addEventListener('click', async () => {
+        const category = paCategory ? paCategory.value : '';
+        const productValue = paProduct ? paProduct.value : '';
+        const name = productValue === '__custom__' ? paCustomName.value.trim() : productValue;
+        const price = paPrice ? paPrice.value : '';
+        const unit = paUnit ? paUnit.value : 'kg';
+
+        if (!category) { paStatus.textContent = 'Alege categoria.'; paStatus.className = 'pa-status pa-error'; return; }
+        if (!name) { paStatus.textContent = 'Alege sau scrie produsul.'; paStatus.className = 'pa-status pa-error'; return; }
+        if (!price || isNaN(parseFloat(price)) || parseFloat(price) < 0) { paStatus.textContent = 'Introdu un preț valid.'; paStatus.className = 'pa-status pa-error'; return; }
+
+        paStatus.textContent = 'Se publică…';
+        paStatus.className = 'pa-status';
+        paSubmit.disabled = true;
+
+        try {
+          const res = await fetch('/produs/nou', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+              'Accept': 'application/json'
+            },
+            body: new URLSearchParams({
+              name, category, price, unit,
+              description: '',
+              available: '1'
+            }).toString()
+          });
+          const data = await res.json().catch(() => ({}));
+          if (res.ok && data.ok) {
+            paStatus.textContent = '✅ „' + data.name + '" a fost publicat!';
+            paStatus.className = 'pa-status pa-ok';
+            if (paCategory) paCategory.value = '';
+            if (paProduct) { paProduct.innerHTML = ''; paProduct.disabled = true; }
+            paCustomWrap.classList.add('hidden');
+            paCustomName.value = '';
+            if (paPrice) paPrice.value = '';
+          } else {
+            paStatus.textContent = data.error || 'Nu am putut publica produsul.';
+            paStatus.className = 'pa-status pa-error';
+          }
+        } catch (err) {
+          paStatus.textContent = 'A apărut o eroare. Încearcă din nou.';
+          paStatus.className = 'pa-status pa-error';
+        }
+        paSubmit.disabled = false;
+      });
+    }
+  }
 })();

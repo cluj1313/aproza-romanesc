@@ -1042,6 +1042,76 @@ img { display: block; max-width: 100%; }
 .last-order-empty small { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
 .last-order-empty .btn { margin-top: 10px; }
 
+/* ---------- Adaugă produs rapid (pagina principală) ---------- */
+.producer-add-section { margin-bottom: 24px; }
+.producer-add-card {
+  background: linear-gradient(135deg, var(--green-light), #fdfbf4);
+  border: 1.5px dashed var(--green);
+  border-radius: 16px;
+  padding: 16px;
+  width: 100%;
+}
+.producer-add-head { margin-bottom: 12px; }
+.producer-add-title {
+  font-family: 'Suez One', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  font-size: 19px;
+  color: var(--green-dark);
+  line-height: 1.2;
+}
+.producer-add-sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.producer-add-pill {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 420px;
+  padding: 13px 18px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--green);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.producer-add-pill:hover { background: var(--green-dark); transform: translateY(-1px); }
+.producer-add-pill.open { background: var(--green-dark); }
+.producer-add-pill-icon { font-size: 18px; line-height: 1; }
+.producer-add-pill-chev { font-size: 12px; opacity: 0.85; margin-left: auto; }
+.producer-add-form {
+  margin-top: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+}
+.producer-add-fields { display: flex; flex-direction: column; gap: 10px; }
+.pa-field { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: var(--muted); }
+.pa-field select,
+.pa-field input {
+  font: inherit;
+  font-weight: 400;
+  padding: 9px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+}
+.pa-field select:focus,
+.pa-field input:focus { outline: 2px solid var(--green); border-color: transparent; }
+.pa-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pa-actions { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+.pa-status { font-size: 13px; font-weight: 600; }
+.pa-status.pa-ok { color: var(--green-dark); }
+.pa-status.pa-error { color: var(--red); }
+
 /* ---------- Producer card ---------- */
 .producer-list { display: flex; flex-direction: column; gap: 14px; }
 .producer-card {
