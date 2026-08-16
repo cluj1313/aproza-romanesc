@@ -294,6 +294,43 @@
     });
   }
 
+  /* ---------- Culori de fundal (scheme) ---------- */
+  const csToggle = document.getElementById('csToggle');
+  const csPopover = document.getElementById('csPopover');
+  if (csToggle && csPopover) {
+    const CS_KEY = 'aprozar-cs';
+    const swatches = csPopover.querySelectorAll('.cs-swatch');
+    function applyCs(name) {
+      document.documentElement.classList.remove('cs-green', 'cs-blue', 'cs-violet', 'cs-warm', 'cs-teal', 'cs-pink');
+      if (name && name !== 'green') document.documentElement.classList.add('cs-' + name);
+      try { localStorage.setItem(CS_KEY, name || 'green'); } catch (e) { /* ignore */ }
+      swatches.forEach(s => s.classList.toggle('active', s.dataset.cs === (name || 'green')));
+    }
+    csToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = !csPopover.classList.contains('hidden');
+      csPopover.classList.toggle('hidden', open);
+      csToggle.setAttribute('aria-expanded', String(!open));
+    });
+    swatches.forEach(s => {
+      s.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyCs(s.dataset.cs);
+        csPopover.classList.add('hidden');
+        csToggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!csPopover.classList.contains('hidden') && !csPopover.contains(e.target) && e.target !== csToggle) {
+        csPopover.classList.add('hidden');
+        csToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+    let savedCs = 'green';
+    try { savedCs = localStorage.getItem(CS_KEY) || 'green'; } catch (e) { /* ignore */ }
+    applyCs(savedCs);
+  }
+
   /* ---------- Card cultivator: recenzii expandabile ---------- */
   document.querySelectorAll('.cultivator-card').forEach(card => {
     const toggle = card.querySelector('.cultivator-reviews-toggle');

@@ -35,6 +35,25 @@
       </nav>
 
       <div class="settings-bar">
+        <div class="cs-wrap">
+          <button type="button" class="icon-btn" id="csToggle" aria-label="Schimbă culorile de fundal" aria-expanded="false" title="Culori de fundal">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+              <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/>
+            </svg>
+          </button>
+          <div class="cs-popover hidden" id="csPopover" role="dialog" aria-label="Culori de fundal">
+            <div class="cs-title">Culoare de fundal</div>
+            <div class="cs-grid">
+              <button type="button" class="cs-swatch cs-green" data-cs="green" aria-label="Verde" title="Verde"></button>
+              <button type="button" class="cs-swatch cs-blue" data-cs="blue" aria-label="Albastru" title="Albastru"></button>
+              <button type="button" class="cs-swatch cs-violet" data-cs="violet" aria-label="Violet" title="Violet"></button>
+              <button type="button" class="cs-swatch cs-warm" data-cs="warm" aria-label="Portocaliu cald" title="Portocaliu cald"></button>
+              <button type="button" class="cs-swatch cs-teal" data-cs="teal" aria-label="Verde albastrui" title="Verde albastrui"></button>
+              <button type="button" class="cs-swatch cs-pink" data-cs="pink" aria-label="Roz" title="Roz"></button>
+            </div>
+          </div>
+        </div>
         <div class="fs-ctl" role="group" aria-label="Mărimea textului">
           <button type="button" class="fs-btn" data-fs="0.9" aria-label="Text mic" title="Text mic">A</button>
           <button type="button" class="fs-btn" data-fs="1" aria-label="Text normal" title="Text normal">A</button>
