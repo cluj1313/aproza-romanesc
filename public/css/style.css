@@ -89,9 +89,24 @@ img { display: block; max-width: 100%; }
   border: 2px solid var(--green-light);
   box-shadow: var(--shadow);
 }
-.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-.brand-text strong { font-size: calc(18px * var(--fs, 1)); letter-spacing: 0.3px; color: var(--green-dark); white-space: nowrap; }
-.brand-text small { font-size: calc(11px * var(--fs, 1)); color: var(--muted); font-weight: 500; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.05; }
+.brand-text strong {
+  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-size: calc(23px * var(--fs, 1));
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--green-dark);
+  white-space: nowrap;
+}
+.brand-text small {
+  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-size: calc(12px * var(--fs, 1));
+  font-weight: 300;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  white-space: nowrap;
+}
 
 .topbar-actions { display: flex; gap: 6px; align-items: center; }
 .settings-bar {
@@ -1852,7 +1867,7 @@ body.dark-green-mode {
   color: var(--text);
 }
 .app-shell.dark-green .last-order-card,
-.app-shell.dark-green .last-order-item { background: #2a5a35; border-color: #3c7447; }
+.app-shell.dark-green .last-order-item { background: rgba(0, 0, 0, 0.35); border-color: rgba(255, 255, 255, 0.18); }
 .app-shell.dark-green .last-order-thumb,
 .app-shell.dark-green .last-order-avatar { background: rgba(255, 255, 255, 0.1); }
 .app-shell.dark-green .cultivator-card,
