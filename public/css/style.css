@@ -90,45 +90,26 @@ img { display: block; max-width: 100%; }
   box-shadow: var(--shadow);
 }
 .brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-.brand-text strong { font-size: calc(18px * var(--fs, 1)); letter-spacing: 0.3px; color: var(--green-dark); }
+.brand-text strong { font-size: calc(18px * var(--fs, 1)); letter-spacing: 0.3px; color: var(--green-dark); white-space: nowrap; }
 .brand-text small { font-size: calc(11px * var(--fs, 1)); color: var(--muted); font-weight: 500; }
 
 .topbar-actions { display: flex; gap: 6px; align-items: center; }
-.textsize-ctl {
-  display: flex;
-  align-items: center;
-  gap: 2px;
+.ts-btn.ts-btn-solo {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: calc(15px * var(--fs, 1));
+  font-weight: 800;
+  color: var(--text);
   background: var(--cream);
   border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 3px;
-}
-.ts-btn {
-  border: none;
-  background: transparent;
-  color: var(--text);
-  font-family: inherit;
-  font-weight: 800;
-  font-size: calc(14px * var(--fs, 1));
-  line-height: 1;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: all 0.15s;
 }
-.ts-btn:hover { background: var(--green-light); }
-.ts-btn:disabled { opacity: 0.35; cursor: default; }
-.ts-label {
-  font-size: calc(12px * var(--fs, 1));
-  font-weight: 800;
-  color: var(--muted);
-  min-width: 14px;
-  text-align: center;
-}
+.ts-btn.ts-btn-solo:hover { background: var(--green-light); border-color: var(--green); }
 .icon-btn {
   position: relative;
   width: 42px;
