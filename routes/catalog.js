@@ -101,9 +101,16 @@ router.get('/', (req, res) => {
   `).get();
 
   const featured = productCards(12);
-  const farmers = withDistance(
-    db.prepare('SELECT * FROM producers ORDER BY created_at ASC LIMIT 8').all(),
-    loc.lat, loc.lng
+  let farmers = decorateProducer(
+    withDistance(
+      db.prepare('SELECT * FROM producers ORDER BY created_at ASC LIMIT 8').all(),
+      loc.lat, loc.lng
+    )
+  );
+  farmers.sort((a, b) =>
+    (b.rating - a.rating) ||
+    (b.ratingCount - a.ratingCount) ||
+    a.name.localeCompare(b.name)
   );
 
   const weekBasket = db.prepare(`

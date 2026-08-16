@@ -784,6 +784,7 @@ img { display: block; max-width: 100%; }
   cursor: pointer;
   transition: all 0.15s;
 }
+.story-add-card[href] { text-decoration: none; }
 .story-add-card:hover { background: var(--green-light); border-style: solid; }
 .story-add-photo span {
   font-size: calc(28px * var(--fs, 1));
