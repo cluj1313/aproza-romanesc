@@ -2,8 +2,8 @@
   --green: #2e7d32;
   --green-dark: #1b5e20;
   --green-light: #e8f5e9;
-  --orange: #f28c28;
-  --orange-dark: #d9731a;
+  --orange: #ffb74d;
+  --orange-dark: #c4690d;
   --cream: #f6f4ef;
   --surface: #f3efe4;
   --text: #1f2937;
@@ -124,7 +124,7 @@ img { display: block; max-width: 100%; }
   align-items: center;
   justify-content: center;
 }
-.badge-cart { background: var(--orange); }
+.badge-cart { background: var(--orange); color: #1a1a1a; }
 
 /* ---------- Top nav (4 meniuri) ---------- */
 .topnav { background: #1b4d27; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
@@ -172,16 +172,16 @@ img { display: block; max-width: 100%; }
 }
 .btn-primary { background: var(--green); color: #fff; }
 .btn-primary:hover { background: var(--green-dark); }
-.btn-cta { background: var(--orange); color: #fff; }
-.btn-cta:hover { background: var(--orange-dark); }
+.btn-cta { background: var(--orange); color: #1a1a1a; }
+.btn-cta:hover { background: var(--orange-dark); color: #fff; }
 .btn-ghost { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
 .btn-ghost:hover { background: var(--green-light); border-color: var(--green); }
 .btn-danger { background: #fdecea; color: var(--red); border: 1.5px solid #f5c6c0; }
 .btn-wa { background: var(--wa); color: #fff; }
 .btn-wa:hover { background: var(--wa-dark); }
 .btn-danger:hover { background: var(--red); color: #fff; }
-.btn-featured { background: var(--orange); color: #fff; border: 1.5px solid var(--orange); }
-.btn-featured:hover { background: var(--orange-dark); border-color: var(--orange-dark); }
+.btn-featured { background: var(--orange); color: #1a1a1a; border: 1.5px solid var(--orange); }
+.btn-featured:hover { background: var(--orange-dark); color: #fff; border-color: var(--orange-dark); }
 .btn-sm { padding: 8px 13px; font-size: 13px; border-radius: 10px; }
 .btn-block { width: 100%; }
 .btn-outline-light { background: transparent; color: #fff; border: 1.5px solid rgba(255, 255, 255, 0.7); }
@@ -539,7 +539,7 @@ img { display: block; max-width: 100%; }
   top: 8px;
   left: 8px;
   background: var(--orange);
-  color: #fff;
+  color: #1a1a1a;
   font-size: 12px;
   font-weight: 800;
   padding: 3px 8px;
@@ -595,7 +595,7 @@ img { display: block; max-width: 100%; }
   flex-shrink: 0;
 }
 .add-btn:hover { background: var(--green-dark); }
-.add-btn.adding { background: var(--orange); }
+.add-btn.adding { background: var(--orange); color: #1a1a1a; }
 .add-btn.added { background: var(--wa-dark); }
 .add-btn-round { width: 34px; height: 34px; border-radius: 50%; font-size: 20px; }
 
@@ -1045,7 +1045,7 @@ img { display: block; max-width: 100%; }
 /* ---------- Adaugă produs rapid (pagina principală) ---------- */
 .producer-add-section { margin-bottom: 24px; }
 .producer-add-card {
-  background: linear-gradient(135deg, var(--green-light), #fdfbf4);
+  background: var(--surface);
   border: 1.5px dashed var(--green);
   border-radius: 16px;
   padding: 16px;
@@ -1059,7 +1059,7 @@ img { display: block; max-width: 100%; }
   color: var(--green-dark);
   line-height: 1.2;
 }
-.producer-add-sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+.producer-add-sub { font-size: 13px; color: var(--text); margin-top: 3px; }
 .producer-add-pill {
   display: flex;
   align-items: center;
