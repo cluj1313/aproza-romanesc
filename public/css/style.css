@@ -464,10 +464,10 @@ img { display: block; max-width: 100%; }
   cursor: pointer;
   transition: all 0.15s;
 }
-.cat-sort-btn:hover { border-color: var(--primary); }
+.cat-sort-btn:hover { border-color: var(--green); }
 .cat-sort-btn.active {
-  background: var(--primary);
-  border-color: var(--primary);
+  background: var(--green);
+  border-color: var(--green);
   color: #fff;
   font-weight: 600;
 }
@@ -480,7 +480,7 @@ img { display: block; max-width: 100%; }
   padding: 0;
   cursor: pointer;
 }
-.cat-pin-hint.shown { color: var(--primary); font-weight: 600; }
+.cat-pin-hint.shown { color: var(--green); font-weight: 600; }
 .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .cat-grid-card {
   position: relative;
