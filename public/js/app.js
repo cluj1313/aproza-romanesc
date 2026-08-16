@@ -252,22 +252,25 @@
     });
   }
 
-  /* ---------- Mărimea textului (A+) ---------- */
-  const tsPlus = document.getElementById('tsPlus');
-  if (tsPlus) {
+  /* ---------- Mărimea textului (A - 4 poziții, de la mic la mare) ---------- */
+  const fsBtns = document.querySelectorAll('.fs-btn');
+  if (fsBtns.length) {
     const FS_KEY = 'aprozar-fs';
-    const LEVELS = [0.9, 1, 1.15, 1.3];
-    let idx = LEVELS.indexOf(parseFloat(localStorage.getItem(FS_KEY) || '1'));
-    if (idx < 0) idx = 1;
-    function applyFs(i) {
-      document.documentElement.style.setProperty('--fs', String(LEVELS[i]));
-      try { localStorage.setItem(FS_KEY, String(LEVELS[i])); } catch (e) { /* ignore */ }
+    function applyFs(level) {
+      document.documentElement.style.setProperty('--fs', String(level));
+      try { localStorage.setItem(FS_KEY, String(level)); } catch (e) { /* ignore */ }
+      fsBtns.forEach(b => b.classList.toggle('active', parseFloat(b.dataset.fs) === level));
     }
-    tsPlus.addEventListener('click', () => {
-      idx = (idx + 1) % LEVELS.length;
-      applyFs(idx);
+    const saved = parseFloat(localStorage.getItem(FS_KEY) || '1');
+    const savedIdx = [...fsBtns].findIndex(b => parseFloat(b.dataset.fs) === saved);
+    fsBtns.forEach((b, i) => {
+      b.addEventListener('click', () => {
+        applyFs(parseFloat(b.dataset.fs));
+        fsBtns.forEach((x, j) => x.setAttribute('aria-pressed', String(j === i)));
+      });
+      b.setAttribute('aria-pressed', String(i === (savedIdx >= 0 ? savedIdx : 1)));
     });
-    applyFs(idx);
+    applyFs(savedIdx >= 0 ? saved : 1);
   }
 
   /* ---------- Fundal verde închis ---------- */

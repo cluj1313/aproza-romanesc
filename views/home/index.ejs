@@ -103,22 +103,29 @@
             </a>
           </div>
         <% }) %>
+        <% if (isProducer) { %>
+          <div class="h-scroll-item farmer-item">
+            <button type="button" class="farmer-card story-add-card" id="storyToggle" aria-expanded="false">
+              <div class="farmer-photo story-add-photo">
+                <span>＋</span>
+              </div>
+              <div class="farmer-info">
+                <strong>Adaugă povestea ta</strong>
+                <small>Spune clienților de unde vii</small>
+              </div>
+            </button>
+          </div>
+        <% } %>
       </div>
       <% if (isProducer) { %>
-        <div class="story-add">
-          <button type="button" class="story-add-toggle" id="storyToggle" aria-expanded="false">
-            <span class="story-add-plus">＋</span>
-            <span>Adaugă povestea ta</span>
-          </button>
-          <div class="story-add-box hidden" id="storyBox">
-            <label class="pa-field">
-              <span>Povestea ta — cum a apărut ferma, ce produci, de ce să te aleagă clienții</span>
-              <textarea name="storyText" id="storyText" rows="4" maxlength="600" placeholder="Scrie povestea fermei tale aici…"></textarea>
-            </label>
-            <div class="pa-actions">
-              <button type="button" class="btn btn-primary btn-sm" id="storySave">Salvează povestea</button>
-              <span class="pa-status" id="storyStatus"></span>
-            </div>
+        <div class="story-add-box hidden" id="storyBox">
+          <label class="pa-field">
+            <span>Povestea ta — cum a apărut ferma, ce produci, de ce să te aleagă clienții</span>
+            <textarea name="storyText" id="storyText" rows="4" maxlength="600" placeholder="Scrie povestea fermei tale aici…"></textarea>
+          </label>
+          <div class="pa-actions">
+            <button type="button" class="btn btn-primary btn-sm" id="storySave">Salvează povestea</button>
+            <span class="pa-status" id="storyStatus"></span>
           </div>
         </div>
       <% } %>
