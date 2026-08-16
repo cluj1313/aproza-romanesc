@@ -24,7 +24,7 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Bebas Neue', 'Oswald', 'Arial Narrow', sans-serif;
   color: var(--text);
   background: #eceae4;
   min-height: 100vh;
@@ -41,7 +41,7 @@ body {
 .page-container h2,
 .cat-grid-card strong,
 .farmer-info strong {
-  font-family: 'Suez One', Georgia, 'Times New Roman', serif;
+  font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
   font-weight: 400;
   letter-spacing: 0.2px;
 }
@@ -91,7 +91,7 @@ img { display: block; max-width: 100%; }
 }
 .brand-text { display: flex; flex-direction: column; line-height: 1.05; }
 .brand-text strong {
-  font-family: 'Anton', 'Oswald', 'Arial Narrow', sans-serif;
+  font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
   font-size: calc(24px * var(--fs, 1));
   font-weight: 400;
   letter-spacing: 0.6px;
@@ -100,7 +100,7 @@ img { display: block; max-width: 100%; }
   white-space: nowrap;
 }
 .brand-text small {
-  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
   font-size: calc(12px * var(--fs, 1));
   font-weight: 300;
   letter-spacing: 0.5px;
@@ -412,7 +412,7 @@ img { display: block; max-width: 100%; }
 /* ---------- Sections ---------- */
 .home-section { margin-bottom: 24px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; gap: 8px; }
-.section-head h2 { font-size: calc(18px * var(--fs, 1)); font-weight: 400; font-family: 'Suez One', Georgia, 'Times New Roman', serif; }
+.section-head h2 { font-size: calc(18px * var(--fs, 1)); font-weight: 400; font-family: 'Bebas Neue', 'Arial Narrow', sans-serif; }
 
 /* Titlu â€žPoveÈ™ti de la ProducÄƒtorii Localiâ€ */
 .farmers-title {
@@ -423,7 +423,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.4px;
   color: var(--green-dark);
   text-align: left;
-  font-family: 'Suez One', Georgia, 'Times New Roman', serif;
+  font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
 }
 .section-sub { font-size: calc(12px * var(--fs, 1)); color: var(--muted); }
 .see-all { font-size: calc(13px * var(--fs, 1)); font-weight: 700; text-decoration: none; color: var(--green-dark); }
@@ -690,7 +690,7 @@ img { display: block; max-width: 100%; }
 }
 .farmer-photo img { width: 100%; height: 100%; object-fit: cover; }
 .farmer-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; align-items: center; }
-.farmer-info strong { font-size: calc(14px * var(--fs, 1)); font-family: 'Suez One', Georgia, 'Times New Roman', serif; font-weight: 400; }
+.farmer-info strong { font-size: calc(14px * var(--fs, 1)); font-family: 'Bebas Neue', 'Arial Narrow', sans-serif; font-weight: 400; }
 .farmer-info small { color: var(--muted); font-size: calc(11.5px * var(--fs, 1)); }
 .farmer-info p {
   font-size: calc(11.5px * var(--fs, 1));
@@ -947,7 +947,7 @@ img { display: block; max-width: 100%; }
   font-weight: 700;
   text-decoration: none;
   line-height: 1.25;
-  font-family: 'Suez One', Georgia, 'Times New Roman', serif;
+  font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
   font-weight: 400;
 }
 .cultivator-name:hover { text-decoration: underline; }
@@ -1050,7 +1050,7 @@ img { display: block; max-width: 100%; }
   margin-bottom: 12px;
 }
 .last-order-title-h {
-  font-family: 'Suez One', Georgia, 'Times New Roman', serif;
+  font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
   font-weight: 400;
   font-size: calc(19px * var(--fs, 1));
   color: var(--green-dark);
@@ -1154,7 +1154,7 @@ img { display: block; max-width: 100%; }
 }
 .producer-add-head { margin-bottom: 12px; }
 .producer-add-title {
-  font-family: 'Suez One', Georgia, 'Times New Roman', serif;
+  font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
   font-weight: 400;
   font-size: calc(19px * var(--fs, 1));
   color: var(--green-dark);
@@ -1384,7 +1384,7 @@ img { display: block; max-width: 100%; }
 }
 .pd-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .pd-head { margin-top: 54px; }
-.pd-head h1 { font-size: calc(23px * var(--fs, 1)); font-weight: 400; font-family: 'Suez One', Georgia, 'Times New Roman', serif; }
+.pd-head h1 { font-size: calc(23px * var(--fs, 1)); font-weight: 400; font-family: 'Bebas Neue', 'Arial Narrow', sans-serif; }
 .pd-owner { font-size: calc(14px * var(--fs, 1)); color: var(--muted); font-weight: 600; margin-top: 2px; }
 .pd-loc { font-size: calc(13.5px * var(--fs, 1)); color: var(--muted); margin: 4px 0 8px; }
 .pd-desc { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-top: 12px; }
@@ -1785,7 +1785,7 @@ img { display: block; max-width: 100%; }
 
 /* ---------- Page head / empty ---------- */
 .page-head { margin-bottom: 16px; }
-.page-head h1 { font-size: calc(22px * var(--fs, 1)); font-weight: 400; font-family: 'Suez One', Georgia, 'Times New Roman', serif; }
+.page-head h1 { font-size: calc(22px * var(--fs, 1)); font-weight: 400; font-family: 'Bebas Neue', 'Arial Narrow', sans-serif; }
 .sub { color: var(--muted); font-size: calc(13.5px * var(--fs, 1)); }
 .back-link { color: var(--green-dark); text-decoration: none; font-size: calc(13px * var(--fs, 1)); font-weight: 700; display: inline-block; margin-bottom: 6px; }
 .back-link:hover { text-decoration: underline; }
