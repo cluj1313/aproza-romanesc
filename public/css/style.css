@@ -659,8 +659,9 @@ img { display: block; max-width: 100%; }
 }
 .cat-grid-card:hover .cat-pin-btn,
 .cat-pin-btn.pinned { opacity: 1; }
+.cat-pin-btn.pinned svg { fill: #2e7d32; stroke: #2e7d32; }
 .cat-pin-btn:hover { transform: scale(1.1); }
-.cat-pin-btn.pinned { background: var(--cat-color); }
+.cat-pin-btn.pinned { background: #fff; box-shadow: 0 1px 6px rgba(46,125,50,0.35); }
 
 /* Oferta sÄƒptÄƒmÃ¢nii */
 .offer-card {
