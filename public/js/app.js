@@ -755,7 +755,8 @@
         const a = document.createElement('a');
         a.className = 'suggest-item';
         a.href = it.href;
-        a.innerHTML = '<strong>' + it.text + '</strong><small>' + it.sub + '</small>';
+        var icon = it.icon || '';
+        a.innerHTML = '<span class="suggest-icon">' + icon + '</span><span class="suggest-body"><strong>' + it.text + '</strong><small>' + it.sub + '</small></span>';
         a.dataset.idx = i;
         listEl.appendChild(a);
       });

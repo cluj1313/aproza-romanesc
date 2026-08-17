@@ -280,32 +280,44 @@ router.get('/api/suggest', express.json(), async (req, res) => {
   if (q.length < 2) return res.json([]);
 
   const like = `%${q}%`;
+
   const products = await db.prepare(`
-    SELECT pr.name, pr.category, p.name AS producer_name, p.id AS producer_id
+    SELECT pr.name, pr.category, pr.price, pr.unit, pr.description, p.name AS producer_name, p.id AS producer_id
     FROM products pr JOIN producers p ON p.id = pr.producer_id
-    WHERE pr.available = 1 AND unaccent(pr.name) LIKE unaccent(?)
-    ORDER BY pr.name LIMIT 6
-  `).all(like);
+    WHERE pr.available = 1 AND (unaccent(pr.name) LIKE unaccent(?) OR unaccent(pr.description) LIKE unaccent(?) OR unaccent(pr.category) LIKE unaccent(?))
+    ORDER BY pr.name LIMIT 8
+  `).all(like, like, like);
 
   const producers = await db.prepare(`
-    SELECT name, id FROM producers
-    WHERE unaccent(name) LIKE unaccent(?)
-    ORDER BY name LIMIT 3
-  `).all(like);
+    SELECT name, id, description FROM producers
+    WHERE unaccent(name) LIKE unaccent(?) OR unaccent(description) LIKE unaccent(?)
+    ORDER BY name LIMIT 4
+  `).all(like, like);
 
   const categories = CATEGORIES.filter(c =>
-    c.name.toLowerCase().includes(q.toLowerCase())
-  ).slice(0, 3);
+    c.name.toLowerCase().includes(q.toLowerCase()) || c.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(q.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+  ).slice(0, 4);
 
   const results = [];
-  for (const p of products) {
-    results.push({ text: p.name, sub: `${p.producer_name} · ${p.category}`, href: '/producator/' + p.producer_id });
+
+  if (categories.length) {
+    for (const c of categories) {
+      results.push({ type: 'category', icon: c.icon, text: c.name, sub: c.count + ' produse', href: '/?category=' + encodeURIComponent(c.name) });
+    }
   }
-  for (const p of producers) {
-    results.push({ text: p.name, sub: 'Producător', href: '/producator/' + p.id });
+
+  if (producers.length) {
+    for (const p of producers) {
+      const desc = p.description ? p.description.slice(0, 50) + '…' : 'Producător local';
+      results.push({ type: 'producer', icon: '👨‍🌾', text: p.name, sub: desc, href: '/producator/' + p.id });
+    }
   }
-  for (const c of categories) {
-    results.push({ text: c.name, sub: 'Categorie', href: '/?category=' + encodeURIComponent(c.name) });
+
+  if (products.length) {
+    for (const p of products) {
+      const price = p.price.toFixed(2).replace('.', ',') + ' lei/' + p.unit;
+      results.push({ type: 'product', icon: '🛒', text: p.name, sub: p.producer_name + ' · ' + price, href: '/producator/' + p.producer_id });
+    }
   }
 
   res.json(results);
