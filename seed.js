@@ -200,11 +200,10 @@ async function seedMissingProducts() {
   if (added) console.log(`Produse demo completate: +${added}`);
 }
 
-seed().then(() => seedMissingProducts()).then(() => seedAdmin()).then(() => seedMocks()).then(() => {
-  console.log('Seed chain complet.');
-}).catch(err => {
-  console.error('Seed error:', err.message, err.stack);
-});
+seed().catch(err => console.error('Seed error:', err.message));
+seedMissingProducts().catch(err => console.error('SeedMissing error:', err.message));
+seedAdmin().catch(err => console.error('SeedAdmin error:', err.message));
+seedMocks().catch(err => console.error('SeedMocks error:', err.message));
 
 async function seedAdmin() {
   const admin = await db.prepare('SELECT id, is_admin FROM users WHERE phone = ?').get(ADMIN_PHONE);
