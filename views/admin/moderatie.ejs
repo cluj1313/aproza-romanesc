@@ -14,38 +14,32 @@
   <% if (query.error) { %><div class="alert alert-error">⚠ Eroare. Verifică datele.</div><% } %>
 
   <section class="panel" style="margin-bottom:24px;">
-    <h3 style="margin-bottom:16px;font-size:20px;">👥 Toți utilizatorii</h3>
+    <h3 style="margin-bottom:12px;font-size:20px;">👥 Toți utilizatorii</h3>
     <% users.forEach(u => { %>
-      <div class="mod-user-card" style="background:<%= u.is_banned ? '#fff5f5' : '#fff' %>;border:1px solid <%= u.is_banned ? '#e53e3e' : '#e2e8f0' %>;border-radius:12px;padding:16px;margin-bottom:12px;">
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:200px;">
-            <div style="font-size:18px;font-weight:600;">
-              <%= u.name %>
-              <% if (u.is_admin) { %><span class="badge" style="background:#7c3aed;color:#fff;font-size:11px;margin-left:6px;">Admin</span><% } %>
-              <% if (u.is_banned) { %><span class="badge" style="background:#e53e3e;color:#fff;font-size:11px;margin-left:6px;">🚫 Suspendat</span><% } %>
-            </div>
-            <div style="font-size:14px;color:#666;margin-top:4px;">
-              📱 <%= u.phone %> · 
-              <span class="badge" style="background:<%= u.role === 'producer' ? 'var(--green-dark)' : '#6b7280' %>;color:#fff;font-size:11px;"><%= u.role === 'producer' ? 'Producator' : 'Client' %></span>
-              <% if (u.warnings > 0) { %> · ⚠️ <%= u.warnings %> avertismente<% } %>
-            </div>
-            <% if (u.ban_reason) { %>
-              <div style="font-size:13px;color:#e53e3e;margin-top:4px;">Motiv suspendare: <%= u.ban_reason %></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eee;<%= u.is_banned ? 'background:#fff5f5;' : '' %>;">
+        <div style="flex:1;min-width:0;">
+          <span style="font-size:16px;font-weight:600;"><%= u.name %></span>
+          <% if (u.is_admin) { %><span class="badge" style="background:#7c3aed;color:#fff;font-size:10px;">Admin</span><% } %>
+          <% if (u.is_banned) { %><span class="badge" style="background:#e53e3e;color:#fff;font-size:10px;">🚫</span><% } %>
+          <div style="font-size:13px;color:#666;margin-top:2px;">
+            📱 <%= u.phone %>
+            <span class="badge" style="background:<%= u.role === 'producer' ? 'var(--green-dark)' : '#6b7280' %>;color:#fff;font-size:10px;"><%= u.role === 'producer' ? 'P' : 'C' %></span>
+            <% if (u.warnings > 0) { %> · ⚠️<%= u.warnings %><% } %>
+          </div>
+        </div>
+        <% if (!u.is_admin) { %>
+          <div style="display:flex;gap:6px;flex-shrink:0;">
+            <button type="button" class="btn btn-mod btn-warn" onclick="openMsgModal(<%= u.id %>, '<%= u.name.replace(/'/g, "\\'") %>', 'warning')" style="font-size:13px;padding:6px 12px;">💬 Mesaj</button>
+            <% if (u.is_banned) { %>
+              <form method="POST" action="/admin/moderatie/unban" style="display:inline;">
+                <input type="hidden" name="user_id" value="<%= u.id %>">
+                <button type="submit" class="btn btn-mod btn-unban" style="font-size:13px;padding:6px 12px;">✅ Deblochează</button>
+              </form>
+            <% } else { %>
+              <button type="button" class="btn btn-mod btn-ban" onclick="openMsgModal(<%= u.id %>, '<%= u.name.replace(/'/g, "\\'") %>', 'ban')" style="font-size:13px;padding:6px 12px;">🚫</button>
             <% } %>
           </div>
-          <% if (!u.is_admin) { %>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;">
-              <button type="button" class="btn btn-mod btn-warn" onclick="openMsgModal(<%= u.id %>, '<%= u.name.replace(/'/g, "\\'") %>', 'warning')">💬 Mesaj</button>
-              <button type="button" class="btn btn-mod btn-ban" onclick="openMsgModal(<%= u.id %>, '<%= u.name.replace(/'/g, "\\'") %>', 'ban')">🚫 Blochează</button>
-              <% if (u.is_banned) { %>
-                <form method="POST" action="/admin/moderatie/unban" style="display:inline;" onsubmit="return confirm('Deblocăm contul acestui utilizator?');">
-                  <input type="hidden" name="user_id" value="<%= u.id %>">
-                  <button type="submit" class="btn btn-mod btn-unban">✅ Deblochează</button>
-                </form>
-              <% } %>
-            </div>
-          <% } %>
-        </div>
+        <% } %>
       </div>
     <% }) %>
   </section>
