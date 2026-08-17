@@ -301,7 +301,7 @@
     const CS_KEY = 'aprozar-cs';
     const swatches = csPopover.querySelectorAll('.cs-swatch');
     function applyCs(name) {
-      document.documentElement.classList.remove('cs-green', 'cs-blue', 'cs-violet', 'cs-warm', 'cs-teal', 'cs-pink');
+      document.documentElement.classList.remove('cs-green', 'cs-gl', 'cs-gm', 'cs-g', 'cs-gi', 'cs-gi2');
       if (name && name !== 'green') document.documentElement.classList.add('cs-' + name);
       try { localStorage.setItem(CS_KEY, name || 'green'); } catch (e) { /* ignore */ }
       swatches.forEach(s => s.classList.toggle('active', s.dataset.cs === (name || 'green')));
