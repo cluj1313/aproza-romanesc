@@ -237,23 +237,26 @@ img { display: block; max-width: 100%; }
 /* ---------- Top nav (4 meniuri) ---------- */
 .topnav { background: #0e2b13; border-bottom: 1px solid rgba(255, 255, 255, 0.14); }
 .topnav-inner {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 4px 6px;
-  gap: 2px;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  padding: 2px 4px;
+  gap: 0;
 }
 .topnav a {
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  gap: 3px;
-  padding: 8px 4px;
-  font-size: calc(12.5px * var(--fs, 1));
+  gap: 4px;
+  padding: 7px 6px;
+  font-size: calc(11px * var(--fs, 1));
   font-weight: 300;
   color: #ffffff;
   text-decoration: none;
   border-radius: 10px;
   transition: all 0.15s;
+  white-space: nowrap;
+  flex: 1 1 0;
+  justify-content: center;
 }
 .topnav a.active {
   color: #fff;
