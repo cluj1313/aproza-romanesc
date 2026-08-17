@@ -3,6 +3,7 @@ const db = require('./db');
 const { CATEGORIES, CATEGORY_NAMES } = require('./lib/constants');
 
 const PASSWORD = bcrypt.hashSync('parola123', 10);
+const ADMIN_PASSWORD = bcrypt.hashSync('Qwen1313', 10);
 const ADMIN_PHONE = '0770148119';
 
 const PRODUCERS = [
@@ -209,14 +210,20 @@ module.exports = { seedMocks };
 
 async function seedAdmin() {
   try {
-    const admin = await db.prepare('SELECT id, is_admin FROM users WHERE phone = ?').get(ADMIN_PHONE);
-    if (admin && !admin.is_admin) {
-      await db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(admin.id);
-      console.log('Admin setat pentru ' + ADMIN_PHONE);
-    } else if (!admin) {
+    const admin = await db.prepare('SELECT id, is_admin, password_hash FROM users WHERE phone = ?').get(ADMIN_PHONE);
+    if (admin) {
+      if (!admin.is_admin) {
+        await db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(admin.id);
+      }
+      if (admin.password_hash !== ADMIN_PASSWORD) {
+        await db.prepare('UPDATE users SET password_hash = ? WHERE id = ?').run(ADMIN_PASSWORD, admin.id);
+        console.log('Admin password actualizat pentru ' + ADMIN_PHONE);
+      }
+      console.log('Admin există: ' + ADMIN_PHONE);
+    } else {
       const result = await db.prepare(
         "INSERT INTO users (role, name, email, phone, password_hash, is_admin) VALUES ('producer', 'Administrator', 'admin@aprozar.ro', ?, ?, 1)"
-      ).run(ADMIN_PHONE, PASSWORD);
+      ).run(ADMIN_PHONE, ADMIN_PASSWORD);
       await db.prepare(
         "INSERT INTO producers (user_id, name, owner_name, phone, whatsapp) VALUES (?, 'Administrator', 'Admin', ?, ?)"
       ).run(result.lastInsertRowid, ADMIN_PHONE, ADMIN_PHONE);
