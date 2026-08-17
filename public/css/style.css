@@ -679,7 +679,8 @@ img { display: block; max-width: 100%; }
 .pcard-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: calc(34px * var(--fs, 1)); color: var(--green); }
 .pcard-body { padding: 10px 11px 11px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .pcard-body h4 { font-size: calc(13.5px * var(--fs, 1)); line-height: 1.25; }
-.pcard-provenance { font-size: calc(11px * var(--fs, 1)); color: var(--muted); flex: 1; }
+.pcard-provenance { font-size: calc(11px * var(--fs, 1)); color: var(--muted); flex: 1; display: block; text-decoration: none; }
+.pcard-provenance:hover { color: var(--green); text-decoration: underline; }
 .pcard-footer { display: flex; align-items: baseline; gap: 4px; margin-top: 6px; }
 .price { font-size: calc(15px * var(--fs, 1)); font-weight: 400; color: var(--green-dark); }
 .unit { color: var(--muted); font-size: calc(11.5px * var(--fs, 1)); flex: 1; }
