@@ -229,11 +229,12 @@ if (usePg) {
     }
   }
 
-  initDb().catch(err => {
+  const dbReady = initDb().catch(err => {
     console.error('Eroare la inițializarea PostgreSQL:', err.message);
     process.exit(1);
   });
 
+  db.ready = dbReady;
   module.exports = db;
 
 } else {
