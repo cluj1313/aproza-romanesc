@@ -2248,6 +2248,11 @@ body.dark-green-mode {
 
 .fav-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 
+/* ---------- Cult product fav button ---------- */
+.cult-product-fav { flex-shrink: 0; background: transparent; border: none; padding: 4px; }
+.cult-product-fav svg { fill: none; stroke: #333; }
+.cult-product-fav.fav-active svg { fill: #e53e3e; stroke: #e53e3e; }
+
 /* ---------- Responsive (desktop) ---------- */
 @media (min-width: 501px) {
   .app-shell { margin: 16px auto; border-radius: 22px; min-height: calc(100vh - 32px); }

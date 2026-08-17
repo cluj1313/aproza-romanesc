@@ -108,6 +108,7 @@
                 <strong><%= pr.name %></strong>
                 <span class="cult-product-price"><%= pr.price.toFixed(2).replace('.', ',') %> lei / <%= pr.unit %></span>
               </div>
+              <button type="button" class="fav-btn cult-product-fav" data-fav="<%= pr.id %>" data-fav-type="products" aria-label="Adaugă la favorite" title="Favorite"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
               <button type="button" class="add-btn" data-add="<%= pr.id %>" aria-label="Adaugă <%= pr.name %> în coș">+</button>
             </div>
           <% }) %>
