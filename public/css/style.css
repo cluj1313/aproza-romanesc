@@ -2113,12 +2113,13 @@ body.dark-green-mode {
   width: 34px; height: 34px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   background: rgba(255,255,255,0.85); border: none; cursor: pointer;
-  color: #e57373; transition: background .2s, transform .2s;
+  color: #333; transition: background .2s, transform .2s;
   flex-shrink: 0;
 }
 .fav-btn:hover { background: #fff; transform: scale(1.15); }
-.fav-btn.fav-active { background: #e57373; color: #fff; }
-.fav-btn svg { fill: currentColor; }
+.fav-btn svg { fill: none; stroke: currentColor; }
+.fav-btn.fav-active { color: #e53e3e; }
+.fav-btn.fav-active svg { fill: #e53e3e; stroke: #e53e3e; }
 .fav-title { font-size: calc(24px * var(--fs, 1)); font-weight: 400; }
 .fav-sub { color: var(--muted); margin-bottom: 16px; }
 .fav-empty { text-align: center; padding: 40px 16px; color: var(--muted); }
