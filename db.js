@@ -86,6 +86,16 @@ if (usePg) {
     await pool.query('CREATE EXTENSION IF NOT EXISTS unaccent');
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS user_sessions (
+        sid VARCHAR NOT NULL COLLATE "default",
+        sess JSON NOT NULL,
+        expire TIMESTAMPTZ NOT NULL,
+        PRIMARY KEY (sid)
+      )
+    `);
+    await pool.query('CREATE INDEX IF NOT EXISTS user_sessions_expire_idx ON user_sessions(expire)');
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         role TEXT NOT NULL CHECK (role IN ('producer', 'customer')),

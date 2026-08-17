@@ -292,7 +292,7 @@ router.get('/api/suggest', express.json(), async (req, res) => {
   `).all(like);
 
   const categories = CATEGORIES.filter(c =>
-    c.toLowerCase().includes(q.toLowerCase())
+    c.name.toLowerCase().includes(q.toLowerCase())
   ).slice(0, 3);
 
   const results = [];
@@ -303,7 +303,7 @@ router.get('/api/suggest', express.json(), async (req, res) => {
     results.push({ text: p.name, sub: 'Producător', href: '/producator/' + p.id });
   }
   for (const c of categories) {
-    results.push({ text: c, sub: 'Categorie', href: '/?category=' + encodeURIComponent(c) });
+    results.push({ text: c.name, sub: 'Categorie', href: '/?category=' + encodeURIComponent(c.name) });
   }
 
   res.json(results);
