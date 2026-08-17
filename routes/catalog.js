@@ -106,7 +106,7 @@ router.get('/', async (req, res) => {
   const featured = await productCards(12);
   let farmers = await decorateProducer(
     withDistance(
-      await db.prepare('SELECT * FROM producers ORDER BY created_at ASC LIMIT 8').all(),
+      await db.prepare('SELECT * FROM producers ORDER BY created_at ASC LIMIT 20').all(),
       loc.lat, loc.lng
     )
   );
