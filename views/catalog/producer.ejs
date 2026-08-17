@@ -33,17 +33,22 @@
   </div>
 
   <div class="pd-head">
-    <h1><%= producer.name %></h1>
-    <% if (producer.owner_name) { %><p class="pd-owner">👨‍🌾 <%= producer.owner_name %></p><% } %>
-    <p class="pd-loc">📍 <%= producer.county %><%= producer.locality ? ' · ' + producer.locality : '' %>
-      <% if (producer.address) { %> · <%= producer.address %><% } %>
-    </p>
-    <% if (producer.distanceLabel) { %><span class="chip chip-distance">🚗 la <%= producer.distanceLabel %> de tine</span><% } %>
-    <div class="rating-badge rating-big">
-      <svg viewBox="0 0 24 24" width="18" height="18" fill="#f9a825"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-      <strong><%= rating.avg %></strong>
-      <small>· <%= rating.count %> recenzii</small>
+    <div class="pd-head-left">
+      <h1><%= producer.name %></h1>
+      <% if (producer.owner_name) { %><p class="pd-owner">👨‍🌾 <%= producer.owner_name %></p><% } %>
+      <p class="pd-loc">📍 <%= producer.county %><%= producer.locality ? ' · ' + producer.locality : '' %>
+        <% if (producer.address) { %> · <%= producer.address %><% } %>
+      </p>
+      <% if (producer.distanceLabel) { %><span class="chip chip-distance">🚗 la <%= producer.distanceLabel %> de tine</span><% } %>
+      <div class="rating-badge rating-big">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="#f9a825"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <strong><%= rating.avg %></strong>
+        <small>· <%= rating.count %> recenzii</small>
+      </div>
     </div>
+    <% if (producer.phone) { %>
+      <a href="tel:<%= producer.phone %>" class="pd-phone-big"><%= producer.phone %></a>
+    <% } %>
   </div>
 
   <% if (producer.description) { %>
