@@ -6,6 +6,16 @@
     <a href="tel:<%= user.phone %>" class="pd-phone-big" style="margin-bottom:12px;display:inline-block"><%= user.phone %></a>
   <% } %>
 
+  <% if (activeCategoryData) { %>
+    <div class="cat-hero-banner">
+      <img src="<%= activeCategoryData.image %>" alt="<%= activeCategoryData.name %>" onerror="this.style.display='none'">
+      <div class="cat-hero-overlay">
+        <span class="cat-hero-icon"><%= activeCategoryData.icon %></span>
+        <h2><%= activeCategoryData.name %></h2>
+      </div>
+    </div>
+  <% } %>
+
   <form method="GET" action="/" class="searchbar" role="search">
     <button type="button" class="searchbar-filter" id="filterToggle" aria-label="Filtre">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>

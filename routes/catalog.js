@@ -58,6 +58,7 @@ router.get('/', async (req, res) => {
   const loc = req.session.location || {};
   const base = await cartSummary(req);
   const activeCategory = category || (q ? null : null);
+  const activeCategoryData = activeCategory ? CATEGORIES.find(c => c.name === activeCategory) : null;
 
   let producers = [];
   let searchProducts = [];
@@ -154,6 +155,7 @@ router.get('/', async (req, res) => {
     producerUserId: req.session.user ? req.session.user.id : null,
     categories: CATEGORIES,
     filters: { q: q || '', category: activeCategory || '' },
+    activeCategoryData,
     searchProducts,
     cartCount: base.count,
     hasLocation: loc.lat != null && loc.lng != null
