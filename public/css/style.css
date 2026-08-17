@@ -115,7 +115,7 @@ img { display: block; max-width: 100%; }
   font-size: calc(12px * var(--fs, 1));
   font-weight: 300;
   letter-spacing: 0.5px;
-  color: #000000;
+  color: var(--muted);
   white-space: nowrap;
 }
 
