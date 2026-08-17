@@ -87,6 +87,7 @@ img { display: block; max-width: 100%; }
 .topbar-inner {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   padding: 10px 14px;
 }
