@@ -205,6 +205,8 @@ seedMissingProducts().catch(err => console.error('SeedMissing error:', err.messa
 seedAdmin().catch(err => console.error('SeedAdmin error:', err.message));
 seedMocks().catch(err => console.error('SeedMocks error:', err.message));
 
+module.exports = { seedMocks };
+
 async function seedAdmin() {
   const admin = await db.prepare('SELECT id, is_admin FROM users WHERE phone = ?').get(ADMIN_PHONE);
   if (admin && !admin.is_admin) {

@@ -40,4 +40,23 @@ router.get('/api/site-announcement', async (req, res) => {
   res.json(ann || null);
 });
 
+router.get('/api/db-status', async (req, res) => {
+  const users = await db.prepare('SELECT COUNT(*) AS c FROM users').get();
+  const producers = await db.prepare('SELECT COUNT(*) AS c FROM producers').get();
+  const products = await db.prepare('SELECT COUNT(*) AS c FROM products').get();
+  const mocks = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_mock = 1").get();
+  const admins = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_admin = 1").get();
+  res.json({ users: users.c, producers: producers.c, products: products.c, mocks: mocks.c, admins: admins.c });
+});
+
+router.post('/admin/reseed', requireAdmin, async (req, res) => {
+  const { seedMocks } = require('../seed');
+  try {
+    await seedMocks();
+    res.json({ ok: true, message: 'Mock seed complet.' });
+  } catch (err) {
+    res.json({ ok: false, error: err.message });
+  }
+});
+
 module.exports = router;
