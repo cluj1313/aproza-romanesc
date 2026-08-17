@@ -208,10 +208,22 @@ seedMocks().catch(err => console.error('SeedMocks error:', err.message));
 module.exports = { seedMocks };
 
 async function seedAdmin() {
-  const admin = await db.prepare('SELECT id, is_admin FROM users WHERE phone = ?').get(ADMIN_PHONE);
-  if (admin && !admin.is_admin) {
-    await db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(admin.id);
-    console.log('Admin setat pentru ' + ADMIN_PHONE);
+  try {
+    const admin = await db.prepare('SELECT id, is_admin FROM users WHERE phone = ?').get(ADMIN_PHONE);
+    if (admin && !admin.is_admin) {
+      await db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(admin.id);
+      console.log('Admin setat pentru ' + ADMIN_PHONE);
+    } else if (!admin) {
+      const result = await db.prepare(
+        "INSERT INTO users (role, name, email, phone, password_hash, is_admin) VALUES ('producer', 'Administrator', 'admin@aprozar.ro', ?, ?, 1)"
+      ).run(ADMIN_PHONE, PASSWORD);
+      await db.prepare(
+        "INSERT INTO producers (user_id, name, owner_name, phone, whatsapp) VALUES (?, 'Administrator', 'Admin', ?, ?)"
+      ).run(result.lastInsertRowid, ADMIN_PHONE, ADMIN_PHONE);
+      console.log('Admin creat: ' + ADMIN_PHONE);
+    }
+  } catch (err) {
+    console.error('SeedAdmin error:', err.message);
   }
 }
 
@@ -331,12 +343,17 @@ const MOCK_COVERS = [
 async function seedMocks() {
   try {
     const existing = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_mock = 1").get();
-    if (existing.c > 0) {
-      console.log('Mock producers există deja. Skip.');
+    const expected = CATEGORIES.length * 3;
+    if (existing.c >= expected) {
+      console.log(`Mock producers există deja (${existing.c}/${expected}). Skip.`);
       return;
     }
+    if (existing.c > 0) {
+      console.log(`Mock parțial (${existing.c}/${expected}). Continuă seed.`);
+    }
 
-    let mockIdx = 0;
+    const startIdx = existing.c;
+    let mockIdx = startIdx;
     for (const cat of CATEGORIES) {
       const products = MOCK_PRODUCTS[cat.name] || MOCK_PRODUCTS['Altele'];
       for (let i = 0; i < 3; i++) {
