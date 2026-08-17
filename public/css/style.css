@@ -248,8 +248,10 @@ img { display: block; max-width: 100%; }
   align-items: center;
   gap: 4px;
   padding: 7px 6px;
-  font-size: calc(11px * var(--fs, 1));
-  font-weight: 300;
+  font-size: calc(13px * var(--fs, 1));
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
   color: #ffffff;
   text-decoration: none;
   border-radius: 10px;
