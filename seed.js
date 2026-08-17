@@ -200,8 +200,10 @@ async function seedMissingProducts() {
   if (added) console.log(`Produse demo completate: +${added}`);
 }
 
-seed().then(() => seedMissingProducts()).then(() => seedAdmin()).then(() => seedMocks()).catch(err => {
-  console.error('Seed error:', err.message);
+seed().then(() => seedMissingProducts()).then(() => seedAdmin()).then(() => seedMocks()).then(() => {
+  console.log('Seed chain complet.');
+}).catch(err => {
+  console.error('Seed error:', err.message, err.stack);
 });
 
 async function seedAdmin() {
@@ -326,50 +328,54 @@ const MOCK_COVERS = [
 ];
 
 async function seedMocks() {
-  const existing = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_mock = 1").get();
-  if (existing.c > 0) {
-    console.log('Mock producers există deja. Skip.');
-    return;
-  }
-
-  let mockIdx = 0;
-  for (const cat of CATEGORIES) {
-    const products = MOCK_PRODUCTS[cat.name] || MOCK_PRODUCTS['Altele'];
-    for (let i = 0; i < 3; i++) {
-      const town = MOCK_TOWNS[(mockIdx) % MOCK_TOWNS.length];
-      const farmName = `Ferma Mock ${cat.icon} ${town.locality} #${mockIdx + 1}`;
-      const phone = `0700${String(100000 + mockIdx).slice(0, 6)}`;
-      const email = `mock${mockIdx}@test.local`;
-
-      const userResult = await db.prepare(
-        'INSERT INTO users (role, name, email, phone, password_hash, is_mock) VALUES (?, ?, ?, ?, ?, 1)'
-      ).run('producer', farmName, email, phone, PASSWORD);
-      const userId = userResult.lastInsertRowid;
-
-      const prodResult = await db.prepare(`
-        INSERT INTO producers (user_id, name, owner_name, description, county, locality, phone, whatsapp, lat, lng, avatar_url, cover_url, is_mock)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
-      `).run(
-        userId, farmName, `Producător test ${town.locality}`,
-        `Fermă de testare în ${town.locality}, județul ${town.county}. Produse din categoria ${cat.name}.`,
-        town.county, town.locality, phone, phone,
-        town.lat + (Math.random() - 0.5) * 0.1,
-        town.lng + (Math.random() - 0.5) * 0.1,
-        MOCK_AVATARS[mockIdx % MOCK_AVATARS.length],
-        MOCK_COVERS[mockIdx % MOCK_COVERS.length]
-      );
-      const producerId = prodResult.lastInsertRowid;
-
-      const catProducts = products.slice(0, 2 + (i % 2));
-      for (const [name, desc, price, unit] of catProducts) {
-        const imgUrl = MOCK_IMAGES[(mockIdx + catProducts.indexOf(name)) % MOCK_IMAGES.length];
-        await db.prepare('INSERT INTO products (producer_id, name, description, price, unit, category, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)')
-          .run(producerId, name, desc + ' [TEST]', price, unit, cat.name, imgUrl);
-      }
-
-      mockIdx++;
+  try {
+    const existing = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_mock = 1").get();
+    if (existing.c > 0) {
+      console.log('Mock producers există deja. Skip.');
+      return;
     }
-  }
 
-  console.log(`Seed mock finalizat: ${mockIdx} producători de test, ${CATEGORIES.length} categorii × 3.`);
+    let mockIdx = 0;
+    for (const cat of CATEGORIES) {
+      const products = MOCK_PRODUCTS[cat.name] || MOCK_PRODUCTS['Altele'];
+      for (let i = 0; i < 3; i++) {
+        const town = MOCK_TOWNS[(mockIdx) % MOCK_TOWNS.length];
+        const farmName = `Ferma Mock ${cat.icon} ${town.locality} #${mockIdx + 1}`;
+        const phone = `0700${String(100000 + mockIdx).slice(0, 6)}`;
+        const email = `mock${mockIdx}@test.local`;
+
+        const userResult = await db.prepare(
+          'INSERT INTO users (role, name, email, phone, password_hash, is_mock) VALUES (?, ?, ?, ?, ?, 1)'
+        ).run('producer', farmName, email, phone, PASSWORD);
+        const userId = userResult.lastInsertRowid;
+
+        const prodResult = await db.prepare(`
+          INSERT INTO producers (user_id, name, owner_name, description, county, locality, phone, whatsapp, lat, lng, avatar_url, cover_url, is_mock)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+        `).run(
+          userId, farmName, `Producător test ${town.locality}`,
+          `Fermă de testare în ${town.locality}, județul ${town.county}. Produse din categoria ${cat.name}.`,
+          town.county, town.locality, phone, phone,
+          town.lat + (Math.random() - 0.5) * 0.1,
+          town.lng + (Math.random() - 0.5) * 0.1,
+          MOCK_AVATARS[mockIdx % MOCK_AVATARS.length],
+          MOCK_COVERS[mockIdx % MOCK_COVERS.length]
+        );
+        const producerId = prodResult.lastInsertRowid;
+
+        const catProducts = products.slice(0, 2 + (i % 2));
+        for (const [name, desc, price, unit] of catProducts) {
+          const imgUrl = MOCK_IMAGES[(mockIdx + catProducts.indexOf(name)) % MOCK_IMAGES.length];
+          await db.prepare('INSERT INTO products (producer_id, name, description, price, unit, category, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)')
+            .run(producerId, name, desc + ' [TEST]', price, unit, cat.name, imgUrl);
+        }
+
+        mockIdx++;
+      }
+    }
+
+    console.log(`Seed mock finalizat: ${mockIdx} producători de test, ${CATEGORIES.length} categorii × 3.`);
+  } catch (err) {
+    console.error('Seed mocks error:', err.message);
+  }
 }

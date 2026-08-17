@@ -116,8 +116,7 @@ img { display: block; max-width: 100%; }
   font-size: calc(12px * var(--fs, 1));
   font-weight: 300;
   letter-spacing: 0.5px;
-  color: var(--text);
-  opacity: 0.6;
+  color: #3a3a3a;
   white-space: nowrap;
 }
 
@@ -337,8 +336,8 @@ img { display: block; max-width: 100%; }
 .ddc-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .ddc-all-stores {
   position: absolute; bottom: 14px; right: 16px;
-  color: #fff; font-size: calc(12px * var(--fs, 1));
-  text-decoration: underline; opacity: 0.85;
+  color: #fff; font-size: calc(16px * var(--fs, 1));
+  font-weight: 400; text-decoration: underline; opacity: 0.9;
 }
 .ddc-all-stores:hover { opacity: 1; }
 .ddc-result {
@@ -1964,6 +1963,7 @@ body.dark-green-mode {
   background: #1a3a22;
   transition: background 0.25s ease;
 }
+body.dark-green-mode .brand-text small { color: #c8ddd0; }
 .app-shell.dark-green {
   --text: #e6f0e8;
   --muted: #a7c1ac;
@@ -2009,6 +2009,7 @@ body.dark-green-mode {
 .app-shell.dark-green .cult-review { border-color: #3c7447; }
 .app-shell.dark-green .cult-product { background: rgba(255, 255, 255, 0.06); border-color: #3c7447; }
 .app-shell.dark-green .cult-product-info strong { color: #fff; }
+.app-shell.dark-green .brand-text small { color: #c8ddd0; }
 .app-shell.dark-green .cult-product-price { color: var(--gold); }
 .app-shell.dark-green .cult-product-more { color: #d7e8d8; border-color: #3c7447; }
 .app-shell.dark-green .cult-product-more:hover { background: rgba(255, 255, 255, 0.08); }
