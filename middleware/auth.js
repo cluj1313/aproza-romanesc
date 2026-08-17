@@ -17,9 +17,19 @@ function requireRole(role) {
   };
 }
 
+function requireAdmin(req, res, next) {
+  if (!req.session.user) {
+    return res.status(401).redirect('/login?next=' + encodeURIComponent(req.originalUrl));
+  }
+  if (!req.session.user.is_admin) {
+    return res.status(403).send('Doar administratorul are acces.');
+  }
+  next();
+}
+
 function loadUser(req, res, next) {
   res.locals.user = req.session.user || null;
   next();
 }
 
-module.exports = { requireAuth, requireRole, loadUser };
+module.exports = { requireAuth, requireRole, requireAdmin, loadUser };

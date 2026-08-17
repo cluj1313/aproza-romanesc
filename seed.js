@@ -1,7 +1,9 @@
 const bcrypt = require('bcryptjs');
 const db = require('./db');
+const { CATEGORIES, CATEGORY_NAMES } = require('./lib/constants');
 
 const PASSWORD = bcrypt.hashSync('parola123', 10);
+const ADMIN_PHONE = '0770148119';
 
 const PRODUCERS = [
   {
@@ -198,6 +200,176 @@ async function seedMissingProducts() {
   if (added) console.log(`Produse demo completate: +${added}`);
 }
 
-seed().then(() => seedMissingProducts()).catch(err => {
+seed().then(() => seedMissingProducts()).then(() => seedAdmin()).then(() => seedMocks()).catch(err => {
   console.error('Seed error:', err.message);
 });
+
+async function seedAdmin() {
+  const admin = await db.prepare('SELECT id, is_admin FROM users WHERE phone = ?').get(ADMIN_PHONE);
+  if (admin && !admin.is_admin) {
+    await db.prepare('UPDATE users SET is_admin = 1 WHERE id = ?').run(admin.id);
+    console.log('Admin setat pentru ' + ADMIN_PHONE);
+  }
+}
+
+const MOCK_TOWNS = [
+  { county: 'Cluj', locality: 'Feleacu', lat: 46.72, lng: 23.62 },
+  { county: 'Bihor', locality: 'Finiș', lat: 46.63, lng: 22.31 },
+  { county: 'Arad', locality: 'Curtici', lat: 46.34, lng: 21.31 },
+  { county: 'Timiș', locality: 'Făget', lat: 45.84, lng: 22.18 },
+  { county: 'Sibiu', locality: 'Cisnădie', lat: 45.71, lng: 24.15 },
+  { county: 'Brașov', locality: 'Râșnov', lat: 45.59, lng: 25.46 },
+  { county: 'Mureș', locality: 'Sighișoara', lat: 46.22, lng: 24.79 },
+  { county: 'Alba', locality: 'Sebeș', lat: 45.93, lng: 23.57 },
+  { county: 'Maramureș', locality: 'Sighet', lat: 47.93, lng: 23.89 },
+  { county: 'Suceava', locality: 'Gura Humorului', lat: 47.55, lng: 25.89 },
+  { county: 'Neamț', locality: 'Bicaz', lat: 46.84, lng: 26.09 },
+  { county: 'Iași', locality: 'Târgu Frumos', lat: 47.20, lng: 27.01 },
+  { county: 'Constanța', locality: 'Mangalia', lat: 43.81, lng: 28.58 },
+  { county: 'Prahova', locality: 'Breaza', lat: 45.18, lng: 25.67 },
+];
+
+const MOCK_PRODUCTS = {
+  'Legume': [
+    ['Roșii heirloom', 'Roșii colorate din grădină, soi vechi.', 12.00, 'kg'],
+    ['Ardei gras', 'Ardei proaspăt, cules cu mâna.', 10.00, 'kg'],
+    ['Dovlecel bio', 'Dovlecei tineri, fără pesticide.', 7.00, 'kg'],
+    ['Varză de Brăila', 'Varză românească, dulce și crocantă.', 4.00, 'kg'],
+  ],
+  'Cartofi și ceapă': [
+    ['Cartofi roșii', 'Cartofi noi roșii, fierbi în 10 minute.', 5.00, 'kg'],
+    ['Ceapă galbenă', 'Ceapă uscată, tare și aromată.', 3.50, 'kg'],
+    ['Cartofi mov', 'Cartofi speciali, boabe colorate natural.', 8.00, 'kg'],
+  ],
+  'Fructe': [
+    ['Cireșe de mai', 'Cireșe roșii, dulci ca mierea.', 15.00, 'kg'],
+    ['Zmeură', 'Zmeură proaspătă, culese azi.', 25.00, 'kg'],
+    ['Prune Bistreț', 'Prune pentru compot și magiun.', 7.00, 'kg'],
+    ['Caise românești', 'Caise galbene, coapte la soare.', 12.00, 'kg'],
+  ],
+  'Lactate': [
+    ['Iaurt de casă', 'Iaurt gros, din lapte integral.', 10.00, 'kg'],
+    ['Branză de vaci', 'Brânză proaspătă, fără conservanți.', 20.00, 'kg'],
+    ['Unt de țară', 'Unt gras, bătut manual.', 30.00, 'kg'],
+  ],
+  'Cereale': [
+    ['Grâu pentru măcinat', 'Grâu curățat, ideal pentru făină.', 4.50, 'kg'],
+    ['Ovăz decorticat', 'Ovăz pentru terci sănătos.', 6.00, 'kg'],
+    ['Secară', 'Secară autohtonă, din câmp.', 5.00, 'kg'],
+  ],
+  'Panificație': [
+    ['Pâine cu maia', 'Pâine cu maia naturală, coaptă în cuptor.', 9.00, 'buc'],
+    ['Chifle integrale', 'Chifle cu semințe, proaspete.', 0.80, 'buc'],
+    ['Cozonac cu stafide', 'Cozonac pufos cu stafide.', 35.00, 'buc'],
+  ],
+  'Miere și dulciuri': [
+    ['Miere de tei', 'Miere de tei parfumată, din Munții Apuseni.', 30.00, 'kg'],
+    ['Miere cu nucă', 'Miere cu nuci întregi, borcan.', 25.00, 'borcan'],
+    ['Sirop de artar', 'Sirop natural de artar, fără adaos.', 40.00, 'L'],
+  ],
+  'Dulcețuri': [
+    ['Dulceață de căpșuni', 'Dulceață 100% fructe, fără zahăr alb.', 18.00, 'borcan'],
+    ['Dulceață de visine', 'Visine amare, dulceață tradițională.', 20.00, 'borcan'],
+    ['Gem de afine', 'Gem de afine sălbatice.', 22.00, 'borcan'],
+  ],
+  'Carne și ouă': [
+    ['Ouă de țară', 'Ouă de găini libere, gălbenuș portocaliu.', 1.50, 'buc'],
+    ['Carne de porc', 'Porc crescut în gospodărie, alimentație naturală.', 28.00, 'kg'],
+    ['Cârnați de casă', 'Cârnați afumați pe lemn de fag.', 35.00, 'kg'],
+  ],
+  'Pește': [
+    ['Păstrăv', 'Păstrăv proaspăt de crescătorie.', 40.00, 'kg'],
+    ['Somon afumat', 'Somon afumat artizanal.', 55.00, 'kg'],
+  ],
+  'Conserve și murături': [
+    ['Gogoșari murati', 'Gogoșari în oțet, rețetă veche.', 15.00, 'borcan'],
+    ['Varză murată', 'Varză murată la butoi, tacâmuri.', 12.00, 'kg'],
+    ['Ardei copt la borcan', 'Ardei copți, conservați în ulei.', 16.00, 'borcan'],
+  ],
+  'Băuturi naturale': [
+    ['Socată', 'Băutură din flori de soc, fermentată natural.', 12.00, 'L'],
+    ['Compot de mere', 'Compot de mere fără conservanți.', 10.00, 'L'],
+    ['Tinctură de echinacea', 'Tinctură preparată în casă, imunitate.', 25.00, 'flacon'],
+  ],
+  'Plante și ceaiuri': [
+    ['Ceai de mușețel', 'Mușețel uscat la soare, pungă.', 10.00, '100g'],
+    ['Cimbrișor', 'Cimbrișor proaspăt, pentru ceai.', 8.00, '100g'],
+    ['Rozmarin uscat', 'Rozmarin cules și uscat natural.', 9.00, '100g'],
+  ],
+  'Altele': [
+    ['Sare de baie', 'Sare de baie cu lavandă.', 15.00, 'pachet'],
+    ['Lumanare de ceară', 'Lumânare din ceară naturală de albine.', 20.00, 'buc'],
+  ],
+};
+
+const MOCK_IMAGES = [
+  'https://images.unsplash.com/photo-1592924357228-91a4daadcfea?w=400&q=60',
+  'https://images.unsplash.com/photo-1604977042946-1eecc30f269e?w=400&q=60',
+  'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=400&q=60',
+  'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=400&q=60',
+  'https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?w=400&q=60',
+  'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=400&q=60',
+];
+
+const MOCK_AVATARS = [
+  'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=200&q=60',
+  'https://images.unsplash.com/photo-1589923188900-85dae523342b?w=200&q=60',
+  'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=200&q=60',
+  'https://images.unsplash.com/photo-1581578017093-cd308404f0b6?w=200&q=60',
+];
+
+const MOCK_COVERS = [
+  'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=60',
+  'https://images.unsplash.com/photo-1464226184884-fa280b87c399?w=800&q=60',
+  'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=800&q=60',
+  'https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=800&q=60',
+];
+
+async function seedMocks() {
+  const existing = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_mock = 1").get();
+  if (existing.c > 0) {
+    console.log('Mock producers există deja. Skip.');
+    return;
+  }
+
+  let mockIdx = 0;
+  for (const cat of CATEGORIES) {
+    const products = MOCK_PRODUCTS[cat.name] || MOCK_PRODUCTS['Altele'];
+    for (let i = 0; i < 3; i++) {
+      const town = MOCK_TOWNS[(mockIdx) % MOCK_TOWNS.length];
+      const farmName = `Ferma Mock ${cat.icon} ${town.locality} #${mockIdx + 1}`;
+      const phone = `0700${String(100000 + mockIdx).slice(0, 6)}`;
+      const email = `mock${mockIdx}@test.local`;
+
+      const userResult = await db.prepare(
+        'INSERT INTO users (role, name, email, phone, password_hash, is_mock) VALUES (?, ?, ?, ?, ?, 1)'
+      ).run('producer', farmName, email, phone, PASSWORD);
+      const userId = userResult.lastInsertRowid;
+
+      const prodResult = await db.prepare(`
+        INSERT INTO producers (user_id, name, owner_name, description, county, locality, phone, whatsapp, lat, lng, avatar_url, cover_url, is_mock)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1)
+      `).run(
+        userId, farmName, `Producător test ${town.locality}`,
+        `Fermă de testare în ${town.locality}, județul ${town.county}. Produse din categoria ${cat.name}.`,
+        town.county, town.locality, phone, phone,
+        town.lat + (Math.random() - 0.5) * 0.1,
+        town.lng + (Math.random() - 0.5) * 0.1,
+        MOCK_AVATARS[mockIdx % MOCK_AVATARS.length],
+        MOCK_COVERS[mockIdx % MOCK_COVERS.length]
+      );
+      const producerId = prodResult.lastInsertRowid;
+
+      const catProducts = products.slice(0, 2 + (i % 2));
+      for (const [name, desc, price, unit] of catProducts) {
+        const imgUrl = MOCK_IMAGES[(mockIdx + catProducts.indexOf(name)) % MOCK_IMAGES.length];
+        await db.prepare('INSERT INTO products (producer_id, name, description, price, unit, category, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)')
+          .run(producerId, name, desc + ' [TEST]', price, unit, cat.name, imgUrl);
+      }
+
+      mockIdx++;
+    }
+  }
+
+  console.log(`Seed mock finalizat: ${mockIdx} producători de test, ${CATEGORIES.length} categorii × 3.`);
+}

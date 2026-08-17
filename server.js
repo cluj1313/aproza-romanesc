@@ -15,6 +15,7 @@ async function start() {
   const storeRoutes = require('./routes/stores');
   const cartRoutes = require('./routes/cart');
   const notificationRoutes = require('./routes/notifications');
+  const adminRoutes = require('./routes/admin');
   const { unreadCount } = require('./routes/notifications');
   const { cartSummary } = require('./routes/cart');
 
@@ -88,6 +89,7 @@ async function start() {
   app.use(cartRoutes);
   app.use(notificationRoutes);
   app.use(producerRoutes);
+  app.use(adminRoutes);
 
   app.get('/contul-meu', requireAuth, async (req, res) => {
     const isProducer = req.session.user.role === 'producer';

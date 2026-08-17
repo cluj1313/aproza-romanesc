@@ -2248,6 +2248,36 @@ body.dark-green-mode {
 
 .fav-products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 
+/* ---------- Site announcement overlay ---------- */
+.site-announcement-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.site-announcement-overlay.hidden { display: none; }
+.site-announcement-box {
+  background: #fff; border-radius: 16px; padding: 32px 24px;
+  max-width: 440px; width: 100%; text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  position: relative;
+}
+.site-announcement-icon { font-size: 48px; margin-bottom: 12px; }
+.site-announcement-box h2 { font-size: 20px; margin: 0 0 8px; color: var(--green-dark); }
+.site-announcement-box p { font-size: 15px; color: #555; margin: 0; line-height: 1.5; }
+
+/* ---------- Mock badge ---------- */
+.mock-badge {
+  display: inline-block; background: #f0ad4e; color: #fff;
+  font-size: 10px; font-weight: 700; padding: 2px 6px;
+  border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+  vertical-align: middle; margin-left: 6px;
+}
+.pcard-img .mock-badge {
+  position: absolute; top: 6px; left: 6px; z-index: 2;
+  margin-left: 0;
+}
+
 /* ---------- Cult product fav button ---------- */
 .cult-product-fav { flex-shrink: 0; background: transparent; border: none; padding: 4px; }
 .cult-product-fav svg { fill: none; stroke: #333; }

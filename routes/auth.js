@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
   }
 
   const sessionEmail = user.email && user.email.startsWith('tel:') ? '' : user.email;
-  req.session.user = { id: user.id, name: user.name, role: user.role, email: sessionEmail, phone: user.phone };
+  req.session.user = { id: user.id, name: user.name, role: user.role, email: sessionEmail, phone: user.phone, is_admin: !!user.is_admin };
 
   if (req.get('Accept') && req.get('Accept').includes('application/json')) {
     return res.json({ ok: true, redirect: user.role === 'producer' ? '/dashboard' : redirect });
@@ -95,6 +95,15 @@ router.post('/register', async (req, res) => {
       normalizedPhone,
       normalizedPhone
     );
+
+    const realCount = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE role = 'producer' AND is_mock = 0").get();
+    const mockCount = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE role = 'producer' AND is_mock = 1").get();
+    if (mockCount.c > 0 && realCount.c >= mockCount.c) {
+      const mockUsers = await db.prepare("SELECT id FROM users WHERE role = 'producer' AND is_mock = 1 ORDER BY id ASC LIMIT 1").all();
+      if (mockUsers.length) {
+        await db.prepare("DELETE FROM users WHERE id = ?").run(mockUsers[0].id);
+      }
+    }
   }
 
   req.session.user = { id: userId, name: String(name).trim(), role, email: '', phone: normalizedPhone };

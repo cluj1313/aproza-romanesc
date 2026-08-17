@@ -1,0 +1,54 @@
+<%- include('../partials/header', { title }) %>
+
+<div class="page-container">
+  <div class="page-head">
+    <h1>Anunțuri pe site</h1>
+    <p class="sub">Anunțuri care apar tuturor clienților pe prima pagină</p>
+  </div>
+
+  <% if (query.created) { %><div class="alert alert-success">Anunțul a fost publicat.</div><% } %>
+  <% if (query.deleted) { %><div class="alert alert-success">Anunțul a fost șters.</div><% } %>
+  <% if (query.error) { %><div class="alert alert-error">Titlul este obligatoriu.</div><% } %>
+
+  <section class="panel" style="margin-bottom:24px;">
+    <h3 style="margin-bottom:12px;">Anunț nou</h3>
+    <form method="POST" action="/admin/anunturi">
+      <label class="pa-field">
+        <span>Titlu</span>
+        <input type="text" name="title" required placeholder="Ex: Aplicația se deschide mâine!">
+      </label>
+      <label class="pa-field">
+        <span>Mesaj (opțional)</span>
+        <textarea name="message" rows="3" placeholder="Detalii suplimentare..."></textarea>
+      </label>
+      <div class="pa-actions">
+        <button type="submit" class="btn btn-primary">Publică anunțul</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h3 style="margin-bottom:12px;">Anunțuri existente</h3>
+    <% if (!announcements.length) { %>
+      <div class="empty-state"><p>Nu există anunțuri.</p></div>
+    <% } %>
+    <% announcements.forEach(a => { %>
+      <div class="dash-row" style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);">
+        <div style="flex:1;">
+          <strong><%= a.title %></strong>
+          <% if (a.message) { %><p style="margin:2px 0 0;font-size:13px;color:#666;"><%= a.message %></p><% } %>
+          <small style="color:#999;"><%= new Date(a.created_at).toLocaleString('ro-RO') %></small>
+        </div>
+        <span class="badge" style="<%= a.active ? 'background:var(--green-dark);color:#fff' : 'background:#ccc;color:#666' %>"><%= a.active ? 'Activ' : 'Inactiv' %></span>
+        <form method="POST" action="/admin/anunturi/<%= a.id %>/toggle" style="display:inline;">
+          <button type="submit" class="btn btn-sm btn-ghost"><%= a.active ? ' Dezactivează' : ' Activează' %></button>
+        </form>
+        <form method="POST" action="/admin/anunturi/<%= a.id %>/delete" style="display:inline;" onsubmit="return confirm('Ștergi acest anunț?');">
+          <button type="submit" class="btn btn-sm btn-ghost" style="color:#e53e3e;">✕</button>
+        </form>
+      </div>
+    <% }) %>
+  </section>
+</div>
+
+<%- include('../partials/footer') %>

@@ -103,6 +103,8 @@ if (usePg) {
         email TEXT NOT NULL UNIQUE,
         password_hash TEXT NOT NULL,
         phone TEXT,
+        is_admin INTEGER NOT NULL DEFAULT 0,
+        is_mock INTEGER NOT NULL DEFAULT 0,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `);
@@ -123,6 +125,7 @@ if (usePg) {
         lng REAL,
         avatar_url TEXT NOT NULL DEFAULT '',
         cover_url TEXT NOT NULL DEFAULT '',
+        is_mock INTEGER NOT NULL DEFAULT 0,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `);
@@ -228,6 +231,16 @@ if (usePg) {
         method TEXT NOT NULL DEFAULT 'email',
         expires_at TIMESTAMPTZ NOT NULL,
         "used" INTEGER NOT NULL DEFAULT 0,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS site_announcements (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        message TEXT NOT NULL DEFAULT '',
+        active INTEGER NOT NULL DEFAULT 1,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )
     `);
@@ -369,6 +382,13 @@ if (usePg) {
       used INTEGER NOT NULL DEFAULT 0,
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
+    CREATE TABLE IF NOT EXISTS site_announcements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      message TEXT NOT NULL DEFAULT '',
+      active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 
   module.exports = db;
@@ -379,5 +399,8 @@ if (usePg) {
   }
   ensureColumn('users', 'phone', 'phone TEXT');
   db.prepare(`CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone ON users(phone)`).run();
+  ensureColumn('users', 'is_admin', 'is_admin INTEGER NOT NULL DEFAULT 0');
+  ensureColumn('users', 'is_mock', 'is_mock INTEGER NOT NULL DEFAULT 0');
+  ensureColumn('producers', 'is_mock', 'is_mock INTEGER NOT NULL DEFAULT 0');
   ensureColumn('announcements', 'featured', 'featured INTEGER NOT NULL DEFAULT 0');
 }

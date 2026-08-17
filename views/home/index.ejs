@@ -1,5 +1,14 @@
 <%- include('../partials/header', { title }) %>
 
+<div class="site-announcement-overlay hidden" id="siteAnnouncement">
+  <div class="site-announcement-box">
+    <div class="site-announcement-icon">📢</div>
+    <h2 id="annTitle"></h2>
+    <p id="annMessage"></p>
+    <button type="button" class="btn btn-primary" id="annCloseBtn" style="margin-top:16px;">Am înțeles, închide</button>
+  </div>
+</div>
+
 <div class="page-container">
 
   <% if (user && user.phone) { %>
