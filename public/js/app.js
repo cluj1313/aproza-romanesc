@@ -110,6 +110,17 @@
   }
 
   document.addEventListener('click', async (e) => {
+    const pwToggle = e.target.closest('.pw-toggle');
+    if (pwToggle) {
+      e.preventDefault();
+      const wrap = pwToggle.closest('.pw-wrap');
+      const input = wrap.querySelector('.pw-input');
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      pwToggle.querySelector('.pw-eye-on').style.display = isHidden ? 'none' : '';
+      pwToggle.querySelector('.pw-eye-off').style.display = isHidden ? '' : 'none';
+      return;
+    }
     const addBtn = e.target.closest('[data-add]');
     if (addBtn) {
       e.preventDefault();
