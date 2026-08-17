@@ -1,85 +1,157 @@
 <%- include('../partials/header', { title: 'Favoriți' }) %>
 
 <div class="page-container">
-  <h1 class="fav-title">Favoriții tăi ❤️</h1>
-  <p class="fav-sub">Producătorii pe care i-ai salvat.</p>
+  <h1 class="fav-title">Favoriții tăi</h1>
 
   <div id="favEmpty" class="fav-empty" style="display:none">
-    <p>Nu ai încă producători favoriți.</p>
+    <p>Nu ai încă nimic salvat.</p>
     <p>Apasă <span class="fav-empty-heart">♥</span> pe un card pentru a salva.</p>
     <a href="/" class="btn btn-primary" style="margin-top:14px">Vezi producători</a>
   </div>
 
-  <div class="cultivator-list" id="favList"></div>
+  <div id="favContent"></div>
 </div>
 
 <script>
 (function(){
-  var ids = [];
-  try { ids = JSON.parse(localStorage.getItem('aprozar-favs') || '[]'); } catch(e){}
-  if (!ids.length) {
-    document.getElementById('favEmpty').style.display = '';
-    return;
-  }
-  fetch('/api/favorites?ids=' + ids.join(','))
-    .then(function(r){ return r.json(); })
-    .then(function(producers){
-      if (!producers.length) {
-        document.getElementById('favEmpty').style.display = '';
-        return;
-      }
-      var list = document.getElementById('favList');
-      producers.forEach(function(p){
-        var stars = '';
-        for (var i = 1; i <= 5; i++) {
-          stars += '<svg class="' + (i <= Math.round(p.rating) ? 'star-on' : 'star-off') + '" viewBox="0 0 24 24" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
-        }
-        var coverHtml = p.cover_url
-          ? '<img src="' + p.cover_url + '" alt="Grădina ' + p.name + '" loading="lazy">'
-          : '<div class="cultivator-cover-fallback"><span>🌾</span></div>';
-        var avatarHtml = p.avatar_url
-          ? '<img src="' + p.avatar_url + '" alt="Avatar ' + p.name + '" loading="lazy">'
-          : '<span>👨‍🌾</span>';
-        var html = '<div class="cultivator-card">' +
-          '<a href="/producator/' + p.id + '" class="cultivator-link">' +
-          '<div class="cultivator-cover">' + coverHtml + '</div></a>' +
-          '<div class="cultivator-top">' +
-          '<button type="button" class="fav-btn fav-active" data-fav="' + p.id + '" aria-label="Elimină din favorite" title="Favorite">' +
-          '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
-          '</button>' +
-          (p.phone ? '<a href="tel:' + p.phone + '" class="cult-ico phone" title="Sună"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>' : '') +
-          '</div>' +
-          '<div class="cultivator-overlay">' +
-          '<div class="cultivator-avatar">' + avatarHtml + '</div>' +
-          '<div class="cultivator-body">' +
-          '<a href="/producator/' + p.id + '" class="cultivator-name">' + p.name + '</a>' +
-          '<small class="cultivator-loc">📍 ' + p.county + (p.locality ? ' · ' + p.locality : '') + '</small>' +
-          '<div class="cultivator-rating"><span class="stars">' + stars + '</span>' +
-          '<span class="rating-num">' + p.rating + ' (' + p.ratingCount + ')</span></div>' +
-          '</div></div></div>';
-        list.insertAdjacentHTML('beforeend', html);
-      });
-      initFavBtns();
-    })
-    .catch(function(){ document.getElementById('favEmpty').style.display = ''; });
+  var LS = {
+    categories: get('categories'),
+    producers: get('producers'),
+    products: get('products')
+  };
 
-  function initFavBtns() {
-    document.querySelectorAll('.fav-btn[data-fav]').forEach(function(btn) {
-      btn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        var id = String(this.dataset.fav);
-        var favs = [];
-        try { favs = JSON.parse(localStorage.getItem('aprozar-favs') || '[]'); } catch(ex){}
-        var idx = favs.indexOf(id);
-        if (idx >= 0) { favs.splice(idx, 1); } else { favs.push(id); }
-        try { localStorage.setItem('aprozar-favs', JSON.stringify(favs)); } catch(ex){}
-        var card = this.closest('.cultivator-card');
-        if (card) card.remove();
-        if (!favs.length) document.getElementById('favEmpty').style.display = '';
-      });
-    });
+  function get(type) { try { return JSON.parse(localStorage.getItem('aprozar-fav-' + type) || '[]'); } catch(e){ return []; } }
+  function save(type, arr) { try { localStorage.setItem('aprozar-fav-' + type, JSON.stringify(arr)); } catch(e){} }
+
+  var total = LS.categories.length + LS.producers.length + LS.products.length;
+  if (!total) { document.getElementById('favEmpty').style.display = ''; return; }
+
+  var container = document.getElementById('favContent');
+  container.innerHTML =
+    buildSection('Categorii favorite', 'categories', LS.categories.length) +
+    buildSection('Producători favoriți', 'producers', LS.producers.length) +
+    buildSection('Produse favorite', 'products', LS.products.length);
+
+  function buildSection(title, type, count) {
+    return '<div class="fav-section" data-type="' + type + '">' +
+      '<button type="button" class="fav-section-head" aria-expanded="false">' +
+        '<span class="fav-section-title">' + title + '</span>' +
+        '<span class="fav-section-badge">' + count + '</span>' +
+        '<svg class="fav-section-arrow" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>' +
+      '</button>' +
+      '<div class="fav-section-body"></div>' +
+    '</div>';
   }
+
+  document.querySelectorAll('.fav-section-head').forEach(function(head) {
+    head.addEventListener('click', function() {
+      var section = this.closest('.fav-section');
+      var body = section.querySelector('.fav-section-body');
+      var expanded = this.getAttribute('aria-expanded') === 'true';
+      this.setAttribute('aria-expanded', String(!expanded));
+      section.classList.toggle('open', !expanded);
+
+      if (!expanded && !body.dataset.loaded) {
+        body.dataset.loaded = '1';
+        var type = section.dataset.type;
+        if (type === 'categories') loadCategories(body);
+        else if (type === 'producers') loadProducers(body);
+        else if (type === 'products') loadProducts(body);
+      }
+    });
+  });
+
+  function loadCategories(body) {
+    if (!LS.categories.length) { body.innerHTML = emptyMsg('Nu ai categorii favorite.'); return; }
+    fetch('/api/favorites/cats?names=' + encodeURIComponent(LS.categories.join(',')))
+      .then(function(r){ return r.json(); })
+      .then(function(cats) {
+        if (!cats.length) { body.innerHTML = emptyMsg('Nu ai categorii favorite.'); return; }
+        var html = '<div class="fav-cat-list">';
+        cats.forEach(function(c) {
+          html += '<a href="/?category=' + encodeURIComponent(c.name) + '" class="fav-cat-item">' +
+            '<span class="fav-cat-icon">' + c.icon + '</span>' +
+            '<span class="fav-cat-name">' + c.name + '</span>' +
+            '<button type="button" class="fav-btn fav-active" data-fav="' + c.name + '" data-fav-type="categories" title="Elimină din favorite">' +
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+            '</button>' +
+          '</a>';
+        });
+        body.innerHTML = html + '</div>';
+      });
+  }
+
+  function loadProducers(body) {
+    if (!LS.producers.length) { body.innerHTML = emptyMsg('Nu ai producători favoriți.'); return; }
+    fetch('/api/favorites?ids=' + LS.producers.join(','))
+      .then(function(r){ return r.json(); })
+      .then(function(producers) {
+        if (!producers.length) { body.innerHTML = emptyMsg('Nu ai producători favoriți.'); return; }
+        var html = '<div class="cultivator-list">';
+        producers.forEach(function(p) {
+          var stars = '';
+          for (var i = 1; i <= 5; i++) {
+            stars += '<svg class="' + (i <= Math.round(p.rating) ? 'star-on' : 'star-off') + '" viewBox="0 0 24 24" width="14" height="14"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+          }
+          var coverHtml = p.cover_url
+            ? '<img src="' + p.cover_url + '" alt="Grădina ' + p.name + '" loading="lazy">'
+            : '<div class="cultivator-cover-fallback"><span>🌾</span></div>';
+          var avatarHtml = p.avatar_url
+            ? '<img src="' + p.avatar_url + '" alt="Avatar ' + p.name + '" loading="lazy">'
+            : '<span>👨‍🌾</span>';
+          html += '<div class="cultivator-card">' +
+            '<a href="/producator/' + p.id + '" class="cultivator-link">' +
+            '<div class="cultivator-cover">' + coverHtml + '</div></a>' +
+            '<div class="cultivator-top">' +
+            '<button type="button" class="fav-btn fav-active" data-fav="' + p.id + '" data-fav-type="producers" title="Elimină din favorite">' +
+            '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+            '</button>' +
+            (p.phone ? '<a href="tel:' + p.phone + '" class="cult-ico phone" title="Sună"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>' : '') +
+            '</div>' +
+            '<div class="cultivator-overlay">' +
+            '<div class="cultivator-avatar">' + avatarHtml + '</div>' +
+            '<div class="cultivator-body">' +
+            '<a href="/producator/' + p.id + '" class="cultivator-name">' + p.name + '</a>' +
+            '<small class="cultivator-loc">📍 ' + p.county + (p.locality ? ' · ' + p.locality : '') + '</small>' +
+            '<div class="cultivator-rating"><span class="stars">' + stars + '</span>' +
+            '<span class="rating-num">' + p.rating + ' (' + p.ratingCount + ')</span></div>' +
+            '</div></div></div>';
+        });
+        body.innerHTML = html + '</div>';
+      });
+  }
+
+  function loadProducts(body) {
+    if (!LS.products.length) { body.innerHTML = emptyMsg('Nu ai produse favorite.'); return; }
+    fetch('/api/favorites/products?ids=' + LS.products.join(','))
+      .then(function(r){ return r.json(); })
+      .then(function(products) {
+        if (!products.length) { body.innerHTML = emptyMsg('Nu ai produse favorite.'); return; }
+        var html = '<div class="fav-products-grid">';
+        products.forEach(function(pr) {
+          html += '<div class="product-card">' +
+            '<div class="pcard-img">' +
+              (pr.image_url ? '<img src="' + pr.image_url + '" alt="' + pr.name + '" loading="lazy">' : '<div class="pcard-fallback">🥬</div>') +
+              '<button type="button" class="fav-btn pcard-fav-btn fav-active" data-fav="' + pr.id + '" data-fav-type="products" title="Elimină din favorite">' +
+              '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+              '</button>' +
+            '</div>' +
+            '<div class="pcard-body">' +
+              '<h4>' + pr.name + '</h4>' +
+              '<a href="/producator/' + pr.producer_id + '" class="pcard-provenance">De la ' + pr.producer_name + (pr.county ? ' · ' + pr.county : '') + '</a>' +
+              '<div class="pcard-footer">' +
+                '<span class="price">' + pr.price.toFixed(2).replace('.', ',') + ' lei</span>' +
+                '<span class="unit">/ ' + pr.unit + '</span>' +
+                '<button type="button" class="add-btn add-btn-round" data-add="' + pr.id + '" aria-label="Adaugă în coș">+</button>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
+        });
+        body.innerHTML = html + '</div>';
+      });
+  }
+
+  function emptyMsg(msg) { return '<p class="fav-empty-msg">' + msg + '</p>'; }
 })();
 </script>
 

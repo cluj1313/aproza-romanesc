@@ -340,4 +340,33 @@ router.get('/api/favorites', express.json(), async (req, res) => {
   res.json(producersWithDist);
 });
 
+router.get('/api/favorites/products', express.json(), async (req, res) => {
+  const ids = String(req.query.ids || '').split(',').filter(Boolean).map(Number).filter(n => n > 0);
+  if (!ids.length) return res.json([]);
+
+  const placeholders = ids.map(() => '?').join(',');
+  const products = await db.prepare(`
+    SELECT pr.id, pr.name, pr.price, pr.unit, pr.image_url, pr.category,
+           p.id AS producer_id, p.name AS producer_name, p.county, p.locality, p.owner_name
+    FROM products pr JOIN producers p ON p.id = pr.producer_id
+    WHERE pr.id IN (${placeholders}) AND pr.available = 1
+    ORDER BY pr.name
+  `).all(...ids);
+
+  res.json(products);
+});
+
+router.get('/api/favorites/cats', express.json(), async (req, res) => {
+  const names = String(req.query.names || '').split(',').filter(Boolean);
+  if (!names.length) return res.json([]);
+
+  const { CATEGORIES } = require('../lib/constants');
+  const results = names.map(name => {
+    const cat = CATEGORIES.find(c => c.name === name);
+    return cat || null;
+  }).filter(Boolean);
+
+  res.json(results);
+});
+
 module.exports = router;

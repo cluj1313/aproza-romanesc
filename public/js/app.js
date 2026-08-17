@@ -805,17 +805,26 @@
     });
   }
 
-  /* ---------- Favorites (localStorage) ---------- */
-  function getFavs() {
-    try { return JSON.parse(localStorage.getItem('aprozar-favs') || '[]'); } catch (e) { return []; }
+  /* ---------- Favorites (localStorage) — 3 types ---------- */
+  function getFav(type) {
+    try { return JSON.parse(localStorage.getItem('aprozar-fav-' + type) || '[]'); } catch (e) { return []; }
   }
-  function saveFavs(arr) {
-    try { localStorage.setItem('aprozar-favs', JSON.stringify(arr)); } catch (e) {}
+  function saveFav(type, arr) {
+    try { localStorage.setItem('aprozar-fav-' + type, JSON.stringify(arr)); } catch (e) {}
   }
+  function toggleFav(type, id) {
+    var arr = getFav(type);
+    var idx = arr.indexOf(id);
+    if (idx >= 0) { arr.splice(idx, 1); } else { arr.push(id); }
+    saveFav(type, arr);
+    return idx < 0;
+  }
+
   function syncFavBtns() {
-    var favs = getFavs();
     document.querySelectorAll('.fav-btn[data-fav]').forEach(function (btn) {
-      if (favs.indexOf(btn.dataset.fav) >= 0) {
+      var type = btn.dataset.favType || 'producers';
+      var arr = getFav(type);
+      if (arr.indexOf(btn.dataset.fav) >= 0) {
         btn.classList.add('fav-active');
         btn.setAttribute('aria-label', 'Elimină din favorite');
       } else {
@@ -830,11 +839,8 @@
     if (!btn) return;
     e.preventDefault();
     e.stopPropagation();
-    var id = btn.dataset.fav;
-    var favs = getFavs();
-    var idx = favs.indexOf(id);
-    if (idx >= 0) { favs.splice(idx, 1); } else { favs.push(id); }
-    saveFavs(favs);
+    var type = btn.dataset.favType || 'producers';
+    toggleFav(type, btn.dataset.fav);
     syncFavBtns();
   });
 
