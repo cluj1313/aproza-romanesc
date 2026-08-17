@@ -273,4 +273,40 @@ router.post('/producator/:id/review', express.urlencoded({ extended: true }), as
   res.redirect('/producator/' + producerId + '#recenzii');
 });
 
+router.get('/api/suggest', express.json(), async (req, res) => {
+  const q = String(req.query.q || '').trim();
+  if (q.length < 2) return res.json([]);
+
+  const like = `%${q}%`;
+  const products = await db.prepare(`
+    SELECT pr.name, pr.category, p.name AS producer_name, p.id AS producer_id
+    FROM products pr JOIN producers p ON p.id = pr.producer_id
+    WHERE pr.available = 1 AND unaccent(pr.name) LIKE unaccent(?)
+    ORDER BY pr.name LIMIT 6
+  `).all(like);
+
+  const producers = await db.prepare(`
+    SELECT name, id FROM producers
+    WHERE unaccent(name) LIKE unaccent(?)
+    ORDER BY name LIMIT 3
+  `).all(like);
+
+  const categories = CATEGORIES.filter(c =>
+    c.toLowerCase().includes(q.toLowerCase())
+  ).slice(0, 3);
+
+  const results = [];
+  for (const p of products) {
+    results.push({ text: p.name, sub: `${p.producer_name} · ${p.category}`, href: '/producator/' + p.producer_id });
+  }
+  for (const p of producers) {
+    results.push({ text: p.name, sub: 'Producător', href: '/producator/' + p.id });
+  }
+  for (const c of categories) {
+    results.push({ text: c, sub: 'Categorie', href: '/?category=' + encodeURIComponent(c) });
+  }
+
+  res.json(results);
+});
+
 module.exports = router;

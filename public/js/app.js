@@ -733,4 +733,76 @@
       });
     }
   }
+
+  /* ---------- Search autocomplete ---------- */
+  const searchInput = document.querySelector('.searchbar input[name="q"]');
+  if (searchInput) {
+    const form = searchInput.closest('form');
+    let listEl = document.createElement('div');
+    listEl.className = 'suggest-list';
+    form.style.position = 'relative';
+    form.appendChild(listEl);
+
+    let activeIdx = -1;
+    let debounce = null;
+    let lastQuery = '';
+
+    function renderList(items) {
+      listEl.innerHTML = '';
+      activeIdx = -1;
+      if (!items.length) { listEl.classList.remove('open'); return; }
+      items.forEach((it, i) => {
+        const a = document.createElement('a');
+        a.className = 'suggest-item';
+        a.href = it.href;
+        a.innerHTML = '<strong>' + it.text + '</strong><small>' + it.sub + '</small>';
+        a.dataset.idx = i;
+        listEl.appendChild(a);
+      });
+      listEl.classList.add('open');
+    }
+
+    searchInput.addEventListener('input', function () {
+      const q = this.value.trim();
+      clearTimeout(debounce);
+      if (q === lastQuery) return;
+      if (q.length < 2) { listEl.classList.remove('open'); lastQuery = ''; return; }
+      debounce = setTimeout(async () => {
+        try {
+          const r = await fetch('/api/suggest?q=' + encodeURIComponent(q));
+          const data = await r.json();
+          lastQuery = q;
+          renderList(data);
+        } catch (e) { listEl.classList.remove('open'); }
+      }, 200);
+    });
+
+    searchInput.addEventListener('keydown', function (e) {
+      const items = listEl.querySelectorAll('.suggest-item');
+      if (!items.length) return;
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        activeIdx = Math.min(activeIdx + 1, items.length - 1);
+        items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        activeIdx = Math.max(activeIdx - 1, 0);
+        items.forEach((el, i) => el.classList.toggle('active', i === activeIdx));
+      } else if (e.key === 'Enter' && activeIdx >= 0) {
+        e.preventDefault();
+        window.location.href = items[activeIdx].href;
+      } else if (e.key === 'Escape') {
+        listEl.classList.remove('open');
+      }
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!form.contains(e.target)) listEl.classList.remove('open');
+    });
+
+    searchInput.addEventListener('focus', function () {
+      if (listEl.children.length) listEl.classList.add('open');
+    });
+  }
+
 })();
