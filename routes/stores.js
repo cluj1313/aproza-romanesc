@@ -4,13 +4,13 @@ const { haversineKm, formatDistance } = require('../lib/geo');
 
 const router = express.Router();
 
-router.get('/magazine', (req, res) => {
+router.get('/magazine', async (req, res) => {
   const sessionLoc = req.session.location || {};
   const qLat = parseFloat(req.query.lat);
   const qLng = parseFloat(req.query.lng);
   const lat = !isNaN(qLat) ? qLat : sessionLoc.lat;
   const lng = !isNaN(qLng) ? qLng : sessionLoc.lng;
-  const all = db.prepare('SELECT * FROM stores ORDER BY county, city').all();
+  const all = await db.prepare('SELECT * FROM stores ORDER BY county, city').all();
 
   let stores = all.map(s => ({ ...s, distanceKm: null, distanceLabel: null }));
   if (lat != null && lng != null) {

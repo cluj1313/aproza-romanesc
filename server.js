@@ -2,9 +2,7 @@ const path = require('path');
 const express = require('express');
 const session = require('express-session');
 
-require('./db');
-// Dacă baza de date e goală (ex: primul start sau repornire pe hosting gratuit),
-// se repopulează automat datele demo. Seed-ul nu suprascrie datele existente.
+const db = require('./db');
 require('./seed');
 const { loadUser, requireAuth } = require('./middleware/auth');
 const authRoutes = require('./routes/auth');
@@ -26,19 +24,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const SqliteStore = require('better-sqlite3-session-store')(session);
-const db = require('./db');
-
-app.use(session({
-  store: new SqliteStore({
-    client: db,
-    expired: { clear: true, intervalMs: 900000 }
-  }),
-  secret: process.env.SESSION_SECRET || 'schimba_aceasta_cheie_in_productie',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }
-}));
+if (process.env.DATABASE_URL) {
+  const PgSession = require('connect-pg-simple')(session);
+  app.use(session({
+    store: new PgSession({ pool: db.pool, tableName: 'user_sessions' }),
+    secret: process.env.SESSION_SECRET || 'schimba_aceasta_cheie_in_productie',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }
+  }));
+} else {
+  app.use(session({
+    secret: process.env.SESSION_SECRET || 'schimba_aceasta_cheie_in_productie',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 7 }
+  }));
+}
 
 app.use(loadUser);
 
@@ -62,9 +64,17 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  res.locals.cartCount = cartSummary(req).count;
-  res.locals.unreadNotifs = req.session.user ? unreadCount(req.session.user.id) : 0;
+app.use(async (req, res, next) => {
+  try {
+    res.locals.cartCount = await cartSummary(req);
+  } catch (e) {
+    res.locals.cartCount = { items: [], total: '0.00', count: 0 };
+  }
+  try {
+    res.locals.unreadNotifs = req.session.user ? await unreadCount(req.session.user.id) : 0;
+  } catch (e) {
+    res.locals.unreadNotifs = 0;
+  }
   next();
 });
 
@@ -75,19 +85,20 @@ app.use(cartRoutes);
 app.use(notificationRoutes);
 app.use(producerRoutes);
 
-app.get('/contul-meu', requireAuth, (req, res) => {
+app.get('/contul-meu', requireAuth, async (req, res) => {
   const isProducer = req.session.user.role === 'producer';
+  const cc = await cartSummary(req);
   res.render('account/index', {
     title: 'Contul meu',
     isProducer,
-    cartCount: cartSummary(req).count
+    cartCount: cc.count
   });
 });
 
 app.use((req, res) => {
   res.status(404).render('misc/notfound', {
     title: 'Pagina nu există',
-    cartCount: cartSummary(req).count
+    cartCount: res.locals.cartCount ? res.locals.cartCount.count : 0
   });
 });
 
@@ -96,7 +107,7 @@ app.use((err, req, res, next) => {
   res.status(500).render('misc/error', {
     title: 'Eroare',
     message: err.message || 'A apărut o eroare.',
-    cartCount: cartSummary(req).count
+    cartCount: res.locals.cartCount ? res.locals.cartCount.count : 0
   });
 });
 

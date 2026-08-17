@@ -105,73 +105,77 @@ const STORES = [
   ['Dor de Casă', 'Suceava', 'Suceava', 'Str. Ștefan cel Mare nr. 55', '0230 200 200', 47.6514, 26.2557]
 ];
 
-function seed() {
-  const existing = db.prepare('SELECT COUNT(*) AS c FROM producers').get();
+async function seed() {
+  const existing = await db.prepare('SELECT COUNT(*) AS c FROM producers').get();
   if (existing.c > 0) {
     console.log('Baza de date conține deja date. Seed sărit.');
     return;
   }
 
-  const insertUser = db.prepare('INSERT INTO users (role, name, email, phone, password_hash) VALUES (?, ?, ?, ?, ?)');
-  const insertProducer = db.prepare(`
-    INSERT INTO producers (user_id, name, owner_name, description, county, locality, phone, whatsapp, lat, lng, avatar_url, cover_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `);
-  const insertProduct = db.prepare(
-    'INSERT INTO products (producer_id, name, description, price, unit, category, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)'
-  );
-  const insertStore = db.prepare(
-    'INSERT INTO stores (name, county, city, address, phone, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?)'
-  );
-  const insertReview = db.prepare(
-    'INSERT INTO reviews (producer_id, user_id, rating, comment) VALUES (?, ?, ?, ?)'
-  );
-  const insertAnnouncement = db.prepare(
-    'INSERT INTO announcements (producer_id, type, title, message, percent) VALUES (?, ?, ?, ?, ?)'
-  );
-  const insertNotification = db.prepare(
-    'INSERT INTO notifications (producer_id, target_user_id, type, title, message) VALUES (?, ?, ?, ?, ?)'
-  );
+  const customerResult = await db.prepare('INSERT INTO users (role, name, email, phone, password_hash) VALUES (?, ?, ?, ?, ?)')
+    .run('customer', 'Ion Popescu', 'client@exemplu.ro', '0720123123', PASSWORD);
+  const customerId = customerResult.lastInsertRowid;
 
-  STORES.forEach(s => insertStore.run(...s));
+  const customer2Result = await db.prepare('INSERT INTO users (role, name, email, phone, password_hash) VALUES (?, ?, ?, ?, ?)')
+    .run('customer', 'Ana Vasilescu', 'ana@exemplu.ro', '0740123123', PASSWORD);
+  const customer2Id = customer2Result.lastInsertRowid;
 
-  const customerId = insertUser.run('customer', 'Ion Popescu', 'client@exemplu.ro', '0720123123', PASSWORD).lastInsertRowid;
-  const customer2Id = insertUser.run('customer', 'Ana Vasilescu', 'ana@exemplu.ro', '0740123123', PASSWORD).lastInsertRowid;
+  for (const s of STORES) {
+    await db.prepare('INSERT INTO stores (name, county, city, address, phone, lat, lng) VALUES (?, ?, ?, ?, ?, ?, ?)').run(...s);
+  }
 
-  PRODUCERS.forEach((p, i) => {
-    const userId = insertUser.run('producer', p.name, `ferma${i + 1}@exemplu.ro`, p.phone.replace(/\s/g, ''), PASSWORD).lastInsertRowid;
-    const producerId = insertProducer.run(
-      userId, p.name, p.owner_name, p.description, p.county, p.locality, p.phone, p.whatsapp,
-      p.lat, p.lng, p.avatar_url, p.cover_url
-    ).lastInsertRowid;
+  for (let i = 0; i < PRODUCERS.length; i++) {
+    const p = PRODUCERS[i];
+    const userResult = await db.prepare('INSERT INTO users (role, name, email, phone, password_hash) VALUES (?, ?, ?, ?, ?)')
+      .run('producer', p.name, `ferma${i + 1}@exemplu.ro`, p.phone.replace(/\s/g, ''), PASSWORD);
+    const userId = userResult.lastInsertRowid;
 
-    p.products.forEach(pr => insertProduct.run(producerId, ...pr));
+    const producerResult = await db.prepare(`
+      INSERT INTO producers (user_id, name, owner_name, description, county, locality, phone, whatsapp, lat, lng, avatar_url, cover_url)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(userId, p.name, p.owner_name, p.description, p.county, p.locality, p.phone, p.whatsapp,
+      p.lat, p.lng, p.avatar_url, p.cover_url);
+    const producerId = producerResult.lastInsertRowid;
+
+    for (const pr of p.products) {
+      await db.prepare('INSERT INTO products (producer_id, name, description, price, unit, category, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)')
+        .run(producerId, ...pr);
+    }
 
     if (i === 0) {
-      insertAnnouncement.run(producerId, 'offer', 'Coș de legume proaspete', 'Coș cu roșii, castraveți și salată — doar 15 lei!', null);
-      insertAnnouncement.run(producerId, 'free_shipping', 'Transport gratuit', 'Transport gratuit pentru comenzi peste 50 lei în Vâlcele și împrejurimi.', null);
-      insertNotification.run(producerId, customerId, 'fresh', '🌱 Recoltă proaspătă: Roșii cherry de grădină', 'Roșii cherry de grădină — 9,00 lei/kg. Culese azi dimineață! Disponibil la Ferma Bio Vâlcele.');
-      insertNotification.run(producerId, customer2Id, 'fresh', '🌱 Recoltă proaspătă: Roșii cherry de grădină', 'Roșii cherry de grădină — 9,00 lei/kg. Culese azi dimineață! Disponibil la Ferma Bio Vâlcele.');
-      insertReview.run(producerId, customerId, 5, 'Cele mai bune roșii din zonă! Se simte gustul adevărat de grădină. Recomand cu drag.');
-      insertReview.run(producerId, customer2Id, 4, 'Legume foarte proaspete și oameni de treabă. Doar coada la preluare a fost puțin mai lungă.');
-      db.prepare('UPDATE reviews SET reply = ?, reply_at = datetime(\'now\') WHERE producer_id = ?').run('Mulțumim frumos pentru recenzii! Ne bucurăm că vă place. Vom mai angaja ajutor la preluare. 😊', producerId);
+      await db.prepare('INSERT INTO announcements (producer_id, type, title, message, percent) VALUES (?, ?, ?, ?, ?)')
+        .run(producerId, 'offer', 'Coș de legume proaspete', 'Coș cu roșii, castraveți și salată — doar 15 lei!', null);
+      await db.prepare('INSERT INTO announcements (producer_id, type, title, message, percent) VALUES (?, ?, ?, ?, ?)')
+        .run(producerId, 'free_shipping', 'Transport gratuit', 'Transport gratuit pentru comenzi peste 50 lei în Vâlcele și împrejurimi.', null);
+      await db.prepare('INSERT INTO notifications (producer_id, target_user_id, type, title, message) VALUES (?, ?, ?, ?, ?)')
+        .run(producerId, customerId, 'fresh', '🌱 Recoltă proaspătă: Roșii cherry de grădină', 'Roșii cherry de grădină — 9,00 lei/kg. Culese azi dimineață! Disponibil la Ferma Bio Vâlcele.');
+      await db.prepare('INSERT INTO notifications (producer_id, target_user_id, type, title, message) VALUES (?, ?, ?, ?, ?)')
+        .run(producerId, customer2Id, 'fresh', '🌱 Recoltă proaspătă: Roșii cherry de grădină', 'Roșii cherry de grădină — 9,00 lei/kg. Culese azi dimineață! Disponibil la Ferma Bio Vâlcele.');
+      await db.prepare('INSERT INTO reviews (producer_id, user_id, rating, comment) VALUES (?, ?, ?, ?)')
+        .run(producerId, customerId, 5, 'Cele mai bune roșii din zonă! Se simte gustul adevărat de grădină. Recomand cu drag.');
+      await db.prepare('INSERT INTO reviews (producer_id, user_id, rating, comment) VALUES (?, ?, ?, ?)')
+        .run(producerId, customer2Id, 4, 'Legume foarte proaspete și oameni de treabă. Doar coada la preluare a fost puțin mai lungă.');
+      await db.prepare("UPDATE reviews SET reply = ?, reply_at = NOW() WHERE producer_id = ?")
+        .run('Mulțumim frumos pentru recenzii! Ne bucurăm că vă place. Vom mai angaja ajutor la preluare. 😊', producerId);
     }
     if (i === 1) {
-      insertAnnouncement.run(producerId, 'discount', 'Reducere la mierea polifloră', 'Miere polifloră cu 20% reducere în această săptămână!', 20);
-      insertReview.run(producerId, customerId, 5, 'Mierea este extraordinară, se simte că e culeasă din munte. Voi comanda din nou!');
-      insertReview.run(producerId, customer2Id, 5, 'Cel mai bun polen pe care l-am gustat. Livrare rapidă și ambalaj impecabil.');
+      await db.prepare('INSERT INTO announcements (producer_id, type, title, message, percent) VALUES (?, ?, ?, ?, ?)')
+        .run(producerId, 'discount', 'Reducere la mierea polifloră', 'Miere polifloră cu 20% reducere în această săptămână!', 20);
+      await db.prepare('INSERT INTO reviews (producer_id, user_id, rating, comment) VALUES (?, ?, ?, ?)')
+        .run(producerId, customerId, 5, 'Mierea este extraordinară, se simte că e culeasă din munte. Voi comanda din nou!');
+      await db.prepare('INSERT INTO reviews (producer_id, user_id, rating, comment) VALUES (?, ?, ?, ?)')
+        .run(producerId, customer2Id, 5, 'Cel mai bun polen pe care l-am gustat. Livrare rapidă și ambalaj impecabil.');
     }
     if (i === 3) {
-      insertReview.run(producerId, customer2Id, 5, 'Cozonacul e ca la bunica! Pâinea pe piatră e superbă.');
+      await db.prepare('INSERT INTO reviews (producer_id, user_id, rating, comment) VALUES (?, ?, ?, ?)')
+        .run(producerId, customer2Id, 5, 'Cozonacul e ca la bunica! Pâinea pe piatră e superbă.');
     }
-  });
+  }
 
   console.log(`Seed finalizat: ${PRODUCERS.length} producători, ${STORES.length} magazine Dor de Casă, 4 recenzii, 3 anunțuri, 2 notificări.`);
   console.log('Conturi demo: ferma1@exemplu.ro / client@exemplu.ro · parola: parola123');
 }
 
-// Completează produsele demo lipsă la fiecare pornire (baze de date deja populate).
-// Asigură ca fiecare categorie să aibă cel puțin produsele demo de mai jos.
 const EXTRA_PRODUCTS = [
   ['Moara de Piatră', 'Făină integrală de grâu', 'Măcinată la piatră, fără aditivi, ideală pentru pâine de casă.', 5.50, 'kg', 'Cereale', 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=60'],
   ['Moara de Piatră', 'Mălai de porumb', 'Mălai fin, din porumb românesc, pentru mămăligă și mălai dulce.', 6.00, 'kg', 'Cereale', 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&q=60'],
@@ -180,23 +184,20 @@ const EXTRA_PRODUCTS = [
   ['Raiul Plantei', 'Sare de baie cu lavandă', 'Sare naturală cu lavandă, pentru relaxare, făcută manual.', 14.00, 'pachet', 'Altele', 'https://images.unsplash.com/photo-1564540586988-aa4e53c7a87f?w=400&q=60']
 ];
 
-function seedMissingProducts() {
-  const insertProduct = db.prepare(
-    'INSERT INTO products (producer_id, name, description, price, unit, category, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)'
-  );
-  const exists = db.prepare('SELECT id FROM products WHERE name = ?');
+async function seedMissingProducts() {
   let added = 0;
-
-  EXTRA_PRODUCTS.forEach(([producerName, name, description, price, unit, category, image_url]) => {
-    if (exists.get(name)) return;
-    const producer = db.prepare('SELECT id FROM producers WHERE name = ?').get(producerName);
-    if (!producer) return;
-    insertProduct.run(producer.id, name, description, price, unit, category, image_url);
+  for (const [producerName, name, description, price, unit, category, image_url] of EXTRA_PRODUCTS) {
+    const exists = await db.prepare('SELECT id FROM products WHERE name = ?').get(name);
+    if (exists) continue;
+    const producer = await db.prepare('SELECT id FROM producers WHERE name = ?').get(producerName);
+    if (!producer) continue;
+    await db.prepare('INSERT INTO products (producer_id, name, description, price, unit, category, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)')
+      .run(producer.id, name, description, price, unit, category, image_url);
     added++;
-  });
-
+  }
   if (added) console.log(`Produse demo completate: +${added}`);
 }
 
-seed();
-seedMissingProducts();
+seed().then(() => seedMissingProducts()).catch(err => {
+  console.error('Seed error:', err.message);
+});
