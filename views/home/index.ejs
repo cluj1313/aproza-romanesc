@@ -2,6 +2,10 @@
 
 <div class="page-container">
 
+  <% if (user && user.phone) { %>
+    <a href="tel:<%= user.phone %>" class="pd-phone-big" style="margin-bottom:12px;display:inline-block"><%= user.phone %></a>
+  <% } %>
+
   <form method="GET" action="/" class="searchbar" role="search">
     <svg class="searchbar-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input type="text" name="q" value="<%= filters.q %>" placeholder="Ce cauți astăzi? (ex: roșii, mere…)" autocomplete="off">
