@@ -265,6 +265,7 @@ img { display: block; max-width: 100%; }
   background: rgba(255, 255, 255, 0.18);
 }
 .topnav a:hover { background: rgba(255, 255, 255, 0.12); }
+.topnav .admin-nav-wrap button:hover { background: rgba(255, 255, 255, 0.12); }
 
 /* ---------- Buttons ---------- */
 .btn {
