@@ -517,7 +517,7 @@ img { display: block; max-width: 100%; }
   text-align: left;
   font-family: 'Oswald', 'Arial Narrow', sans-serif;
 }
-.section-sub { font-size: calc(12px * var(--fs, 1)); color: var(--muted); }
+.section-sub { font-size: calc(14px * var(--fs, 1)); color: #000; }
 .see-all { font-size: calc(13px * var(--fs, 1)); font-weight: 400; text-decoration: none; color: var(--green-dark); }
 
 /* CoÈ™ul sÄƒptÄƒmÃ¢nii */
@@ -1997,6 +1997,7 @@ body.dark-green-mode .brand-text small { color: #c8ddd0; }
 .app-shell.dark-green .last-order-item,
 .app-shell.dark-green .producer-add-card { background: rgba(0, 0, 0, 0.35); border-color: rgba(255, 255, 255, 0.18); }
 .app-shell.dark-green .last-order-subtitle { color: #c8ddd0; background: rgba(200, 221, 208, 0.15); border-color: rgba(200, 221, 208, 0.25); }
+.app-shell.dark-green .section-sub { color: #c8ddd0; }
 .app-shell.dark-green .last-order-thumb,
 .app-shell.dark-green .last-order-avatar { background: rgba(255, 255, 255, 0.1); }
 .app-shell.dark-green .cultivator-card,
