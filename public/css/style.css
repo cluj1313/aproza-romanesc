@@ -1151,15 +1151,12 @@ img { display: block; max-width: 100%; }
   justify-content: center;
   width: 52px;
   height: 52px;
-  border: 2px solid var(--green);
-  border-radius: 50%;
-  background: rgba(46, 125, 50, 0.1);
   color: var(--green);
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.15s;
+  transition: color 0.15s;
 }
-.last-order-reorder-icon:hover { background: rgba(46, 125, 50, 0.2); }
+.last-order-reorder-icon:hover { color: var(--green-dark); }
 .last-order-title-h {
   font-family: 'Oswald', 'Arial Narrow', sans-serif;
   font-weight: 300;
@@ -2013,7 +2010,7 @@ body.dark-green-mode .brand-text small { color: #c8ddd0; }
 .app-shell.dark-green .last-order-item,
 .app-shell.dark-green .producer-add-card { background: rgba(0, 0, 0, 0.35); border-color: rgba(255, 255, 255, 0.18); }
 .app-shell.dark-green .last-order-subtitle { color: #c8ddd0; background: rgba(200, 221, 208, 0.15); border-color: rgba(200, 221, 208, 0.25); }
-.app-shell.dark-green .last-order-reorder-icon { border-color: #c8ddd0; color: #c8ddd0; background: rgba(200, 221, 208, 0.1); }
+.app-shell.dark-green .last-order-reorder-icon { color: #c8ddd0; }
 .app-shell.dark-green .section-sub { color: #c8ddd0; }
 .app-shell.dark-green .last-order-thumb,
 .app-shell.dark-green .last-order-avatar { background: rgba(255, 255, 255, 0.1); }
