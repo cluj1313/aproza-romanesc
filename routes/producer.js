@@ -54,7 +54,7 @@ router.get('/profil', producerOnly, async (req, res) => {
     title: 'Profilul meu',
     producer: await getProducerFor(req.session.user.id),
     counties: COUNTIES,
-    error: null, success: null,
+    error: null, success: null, uploadError: null,
     cartCount: res.locals.cartCount.count
   });
 });
@@ -64,7 +64,7 @@ router.post('/profil', producerOnly, fields([{ name: 'image', maxCount: 1 }, { n
   const { name, owner_name, description, county, locality, address, phone, whatsapp, lat, lng } = req.body;
 
   const fail = (error) => res.status(400).render('dashboard/profile', {
-    title: 'Profilul meu', producer, counties: COUNTIES, error, success: null, cartCount: res.locals.cartCount.count
+    title: 'Profilul meu', producer, counties: COUNTIES, error, success: null, uploadError: req.uploadError || null, cartCount: res.locals.cartCount.count
   });
 
   if (!name || !county) return fail('Numele fermei și județul sunt obligatorii.');
@@ -105,6 +105,7 @@ router.post('/profil', producerOnly, fields([{ name: 'image', maxCount: 1 }, { n
     counties: COUNTIES,
     error: null,
     success: 'Profilul a fost actualizat cu succes.',
+    uploadError: null,
     cartCount: res.locals.cartCount.count
   });
 });
