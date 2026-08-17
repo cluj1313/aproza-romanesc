@@ -59,4 +59,19 @@ router.post('/admin/reseed', requireAdmin, async (req, res) => {
   }
 });
 
+router.get('/api/seed-retrigger', async (req, res) => {
+  try {
+    const { seedMocks } = require('../seed');
+    await seedMocks();
+    const users = await db.prepare('SELECT COUNT(*) AS c FROM users').get();
+    const producers = await db.prepare('SELECT COUNT(*) AS c FROM producers').get();
+    const products = await db.prepare('SELECT COUNT(*) AS c FROM products').get();
+    const mocks = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_mock = 1").get();
+    const admins = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_admin = 1").get();
+    res.json({ ok: true, users: users.c, producers: producers.c, products: products.c, mocks: mocks.c, admins: admins.c });
+  } catch (err) {
+    res.json({ ok: false, error: err.message, stack: err.stack });
+  }
+});
+
 module.exports = router;
