@@ -245,9 +245,9 @@ img { display: block; max-width: 100%; }
 .topnav a {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 7px 6px;
-  font-size: calc(13px * var(--fs, 1));
+  gap: 3px;
+  padding: 7px 4px;
+  font-size: 12px;
   font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 0.3px;
