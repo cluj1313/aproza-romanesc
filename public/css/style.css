@@ -1111,19 +1111,21 @@ img { display: block; max-width: 100%; }
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 8px;
   border: none;
   background: var(--green);
   color: #fff;
-  font-size: calc(15px * var(--fs, 1));
+  font-family: 'Oswald', 'Arial Narrow', sans-serif;
+  font-size: calc(18px * var(--fs, 1));
   font-weight: 400;
   line-height: 1;
-  padding: 12px 16px;
+  padding: 15px 20px;
   border-radius: 999px;
   cursor: pointer;
   flex-shrink: 0;
   white-space: nowrap;
   text-align: center;
+  box-shadow: 0 4px 14px rgba(46, 125, 50, 0.35);
   transition: background 0.15s;
 }
 .last-order-cta:hover { background: var(--green-dark); }
