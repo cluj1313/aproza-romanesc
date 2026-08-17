@@ -46,7 +46,13 @@ router.get('/api/db-status', async (req, res) => {
   const products = await db.prepare('SELECT COUNT(*) AS c FROM products').get();
   const mocks = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_mock = 1").get();
   const admins = await db.prepare("SELECT COUNT(*) AS c FROM users WHERE is_admin = 1").get();
-  res.json({ users: users.c, producers: producers.c, products: products.c, mocks: mocks.c, admins: admins.c });
+  const tables = await db.prepare("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name").all();
+  const cols = await db.prepare("SELECT column_name FROM information_schema.columns WHERE table_name = 'users' ORDER BY ordinal_position").all();
+  res.json({
+    users: users.c, producers: producers.c, products: products.c, mocks: mocks.c, admins: admins.c,
+    tables: tables.map(t => t.table_name),
+    userCols: cols.map(c => c.column_name)
+  });
 });
 
 router.post('/admin/reseed', requireAdmin, async (req, res) => {
