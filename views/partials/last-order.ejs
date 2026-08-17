@@ -1,16 +1,19 @@
 <section class="home-section last-order-section">
   <% if (!lastOrder) { %>
     <div class="last-order-card last-order-empty">
-      <div class="last-order-title">
-        <h2 class="last-order-title-h">🕘 Ultimele Cumpărături</h2>
-        <% if (user) { %>
+      <% if (user) { %>
+        <div class="last-order-title">
+          <h2 class="last-order-title-h">🕘 Ultimele Cumpărături</h2>
           <p>Nu ai făcut încă nicio comandă.</p>
           <small>Plasează prima comandă și o vei găsi aici pentru re-cumpărare rapidă.</small>
-        <% } else { %>
-          <p>Comandă rapid ca și ultima dată.</p>
-          <button type="button" class="btn btn-primary btn-block" data-quick-login>⚡ Recumpără Rapid</button>
-        <% } %>
-      </div>
+        </div>
+      <% } else { %>
+        <div class="last-order-head">
+          <h2 class="last-order-title-h">🕘 Ultimele Cumpărături</h2>
+          <span class="last-order-subtitle">Comandă rapid ca și ultima dată.</span>
+        </div>
+        <button type="button" class="btn btn-primary btn-block" data-quick-login>⚡ Recumpără Rapid</button>
+      <% } %>
     </div>
   <% } else { %>
 

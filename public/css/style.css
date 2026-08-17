@@ -1234,6 +1234,7 @@ img { display: block; max-width: 100%; }
 .last-order-info small { color: var(--muted); font-size: calc(11px * var(--fs, 1)); white-space: nowrap; }
 
 .last-order-empty .last-order-title-h { font-size: calc(18px * var(--fs, 1)); }
+.last-order-empty .last-order-subtitle { font-size: calc(15px * var(--fs, 1)); color: var(--muted); white-space: nowrap; }
 .last-order-empty p { font-size: calc(15px * var(--fs, 1)); color: var(--muted); margin-top: 6px; }
 .last-order-empty small { font-size: calc(15px * var(--fs, 1)); color: var(--muted); display: block; margin-top: 2px; }
 .last-order-empty .btn { margin-top: 10px; }
@@ -1247,7 +1248,7 @@ img { display: block; max-width: 100%; }
   padding: 16px;
   width: 100%;
 }
-.producer-add-head { margin-bottom: 12px; }
+.producer-add-head { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .producer-add-title {
   font-family: 'Oswald', 'Arial Narrow', sans-serif;
   font-weight: 300;
@@ -1255,7 +1256,7 @@ img { display: block; max-width: 100%; }
   color: var(--green-dark);
   line-height: 1.2;
 }
-.producer-add-sub { font-size: calc(15px * var(--fs, 1)); color: var(--text); margin-top: 3px; }
+.producer-add-sub { font-size: calc(15px * var(--fs, 1)); color: var(--muted); white-space: nowrap; }
 .producer-add-pill {
   display: flex;
   align-items: center;
