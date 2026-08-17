@@ -245,6 +245,17 @@ if (usePg) {
       )
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS moderation (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+        type TEXT NOT NULL CHECK (type IN ('warning', 'ban')),
+        message TEXT NOT NULL DEFAULT '',
+        sent_by INTEGER REFERENCES users(id),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
     try {
       await pool.query('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone ON users(phone) WHERE phone IS NOT NULL');
     } catch (e) {
@@ -255,6 +266,7 @@ if (usePg) {
       'ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin INTEGER NOT NULL DEFAULT 0',
       'ALTER TABLE users ADD COLUMN IF NOT EXISTS is_mock INTEGER NOT NULL DEFAULT 0',
       'ALTER TABLE producers ADD COLUMN IF NOT EXISTS is_mock INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE users ADD COLUMN IF NOT EXISTS is_banned INTEGER NOT NULL DEFAULT 0',
     ];
     for (const sql of alterCols) {
       try { await pool.query(sql); } catch (e) { /* column already exists */ }
@@ -398,6 +410,14 @@ if (usePg) {
       active INTEGER NOT NULL DEFAULT 1,
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
+    CREATE TABLE IF NOT EXISTS moderation (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      type TEXT NOT NULL CHECK (type IN ('warning', 'ban')),
+      message TEXT NOT NULL DEFAULT '',
+      sent_by INTEGER REFERENCES users(id),
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
   `);
 
   module.exports = db;
@@ -412,4 +432,5 @@ if (usePg) {
   ensureColumn('users', 'is_mock', 'is_mock INTEGER NOT NULL DEFAULT 0');
   ensureColumn('producers', 'is_mock', 'is_mock INTEGER NOT NULL DEFAULT 0');
   ensureColumn('announcements', 'featured', 'featured INTEGER NOT NULL DEFAULT 0');
+  ensureColumn('users', 'is_banned', 'is_banned INTEGER NOT NULL DEFAULT 0');
 }

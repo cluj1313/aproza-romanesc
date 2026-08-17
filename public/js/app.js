@@ -847,4 +847,29 @@
 
   syncFavBtns();
 
+  var adminBtn = document.getElementById('adminMenuBtn');
+  var adminDrop = document.getElementById('adminDropdown');
+  if (adminBtn && adminDrop) {
+    adminBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      adminDrop.classList.toggle('hidden');
+    });
+    document.addEventListener('click', function() {
+      adminDrop.classList.add('hidden');
+    });
+  }
+
 })();
+
+function dismissWarning(id) {
+  fetch('/api/warnings/dismiss', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ warning_id: id })
+  }).then(function() {
+    var el = document.getElementById('warn-' + id);
+    if (el) el.remove();
+    var wrap = document.querySelector('.warning-banner-wrap');
+    if (wrap && !wrap.querySelector('.warning-banner')) wrap.remove();
+  }).catch(function(){});
+}

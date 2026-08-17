@@ -41,6 +41,20 @@ router.post('/login', async (req, res) => {
     });
   }
 
+  if (user.is_banned) {
+    const banRecord = await db.prepare('SELECT message, created_at FROM moderation WHERE user_id = ? AND type = \'ban\' ORDER BY created_at DESC LIMIT 1').get(user.id);
+    const banMsg = banRecord && banRecord.message ? banRecord.message : 'Contul tău a fost suspendat de administrator.';
+    if (req.get('Accept') && req.get('Accept').includes('application/json')) {
+      return res.status(403).json({ error: banMsg });
+    }
+    return res.status(403).render('auth/login', {
+      title: 'Autentificare',
+      error: banMsg,
+      reset: 0,
+      next: redirect
+    });
+  }
+
   const sessionEmail = user.email && user.email.startsWith('tel:') ? '' : user.email;
   req.session.user = { id: user.id, name: user.name, role: user.role, email: sessionEmail, phone: user.phone, is_admin: !!user.is_admin };
 

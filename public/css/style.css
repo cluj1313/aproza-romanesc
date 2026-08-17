@@ -1947,6 +1947,66 @@ img { display: block; max-width: 100%; }
 .empty-state h3 { font-size: calc(17px * var(--fs, 1)); margin-bottom: 6px; }
 .empty-state p { color: var(--muted); font-size: calc(13.5px * var(--fs, 1)); margin-bottom: 14px; }
 
+/* ---------- Admin Dropdown ---------- */
+.admin-dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  min-width: 180px;
+  z-index: 200;
+  overflow: hidden;
+}
+.admin-dropdown.hidden { display: none; }
+.admin-dropdown a {
+  padding: 10px 16px;
+  text-decoration: none;
+  color: #222;
+  font-size: 14px;
+  white-space: nowrap;
+  border-bottom: 1px solid #f0f0f0;
+}
+.admin-dropdown a:last-child { border-bottom: none; }
+.admin-dropdown a:hover { background: #e8f5e9; }
+.app-shell.dark-green .admin-dropdown { background: #1a3a24; border-color: #2a5030; }
+.app-shell.dark-green .admin-dropdown a { color: #e0e0e0; border-color: #2a5030; }
+.app-shell.dark-green .admin-dropdown a:hover { background: #2a5030; }
+
+/* ---------- Warning Banner ---------- */
+.warning-banner-wrap { padding: 0 16px; }
+.warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: linear-gradient(135deg, #fff7ed, #fef3c7);
+  border: 1px solid #f59e0b;
+  border-left: 4px solid #d97706;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+.warning-banner-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.warning-banner-body { flex: 1; }
+.warning-banner-body strong { color: #92400e; font-size: 14px; display: block; margin-bottom: 4px; }
+.warning-banner-body p { margin: 0 0 4px; color: #78350f; font-size: 14px; line-height: 1.4; }
+.warning-banner-body small { color: #a16207; font-size: 12px; }
+.warning-banner-close {
+  background: none; border: none; font-size: 18px; color: #92400e; cursor: pointer;
+  padding: 0 4px; flex-shrink: 0; line-height: 1;
+}
+.warning-banner-close:hover { color: #78350f; }
+.app-shell.dark-green .warning-banner { background: linear-gradient(135deg, #3b2506, #4a2e08); border-color: #92400e; }
+.app-shell.dark-green .warning-banner-body strong { color: #fbbf24; }
+.app-shell.dark-green .warning-banner-body p { color: #fde68a; }
+.app-shell.dark-green .warning-banner-body small { color: #d97706; }
+.app-shell.dark-green .warning-banner-close { color: #fbbf24; }
+
 /* ---------- Footer ---------- */
 .site-footer {
   background: var(--green-dark);

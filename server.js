@@ -80,6 +80,17 @@ async function start() {
     } catch (e) {
       res.locals.unreadNotifs = 0;
     }
+    try {
+      if (req.session.user && !req.session.user.is_admin) {
+        res.locals.pendingWarnings = await db.prepare(
+          "SELECT id, message, created_at FROM moderation WHERE user_id = ? AND type = 'warning' ORDER BY created_at DESC LIMIT 5"
+        ).all(req.session.user.id);
+      } else {
+        res.locals.pendingWarnings = [];
+      }
+    } catch (e) {
+      res.locals.pendingWarnings = [];
+    }
     next();
   });
 
