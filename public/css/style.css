@@ -1109,7 +1109,7 @@ img { display: block; max-width: 100%; }
 .last-order-cta {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
   border: none;
   background: var(--green);
