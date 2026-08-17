@@ -250,6 +250,15 @@ if (usePg) {
     } catch (e) {
       // index may already exist
     }
+
+    const alterCols = [
+      'ALTER TABLE users ADD COLUMN IF NOT EXISTS is_admin INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE users ADD COLUMN IF NOT EXISTS is_mock INTEGER NOT NULL DEFAULT 0',
+      'ALTER TABLE producers ADD COLUMN IF NOT EXISTS is_mock INTEGER NOT NULL DEFAULT 0',
+    ];
+    for (const sql of alterCols) {
+      try { await pool.query(sql); } catch (e) { /* column already exists */ }
+    }
   }
 
   const dbReady = initDb().catch(err => {
