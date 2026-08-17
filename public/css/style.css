@@ -87,7 +87,7 @@ img { display: block; max-width: 100%; }
 .topbar-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 8px;
   padding: 10px 14px;
 }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text); }
@@ -2090,6 +2090,21 @@ body.dark-green-mode {
   cursor: pointer;
 }
 .img-lightbox-close:hover { background: rgba(255, 255, 255, 0.35); }
+
+/* ---------- Back button ---------- */
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.back-btn:hover { background: var(--green-light); }
 .cultivator-avatar { cursor: pointer; }
 .cart-thumb img, .pcard-img img { cursor: zoom-in; }
 
