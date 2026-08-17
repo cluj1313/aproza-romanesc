@@ -1237,7 +1237,7 @@ img { display: block; max-width: 100%; }
 .last-order-empty .last-order-subtitle { font-size: calc(15px * var(--fs, 1)); color: var(--muted); white-space: nowrap; }
 .last-order-empty p { font-size: calc(15px * var(--fs, 1)); color: var(--muted); margin-top: 6px; }
 .last-order-empty small { font-size: calc(15px * var(--fs, 1)); color: var(--muted); display: block; margin-top: 2px; }
-.last-order-empty .btn { margin-top: 10px; }
+.last-order-empty .btn { margin-top: 10px; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 300; font-size: calc(18px * var(--fs, 1)); line-height: 1.2; }
 
 /* ---------- AdaugÄƒ produs rapid (pagina principalÄƒ) ---------- */
 .producer-add-section { margin-bottom: 24px; }
