@@ -1235,7 +1235,7 @@ img { display: block; max-width: 100%; }
 .last-order-info small { color: var(--muted); font-size: calc(11px * var(--fs, 1)); white-space: nowrap; }
 
 .last-order-empty .last-order-title-h { font-size: calc(18px * var(--fs, 1)); }
-.last-order-empty .last-order-subtitle { font-size: calc(15px * var(--fs, 1)); color: var(--muted); white-space: nowrap; }
+.last-order-empty .last-order-subtitle { font-size: calc(14px * var(--fs, 1)); color: var(--green-dark); background: rgba(46, 125, 50, 0.12); border: 1px solid rgba(46, 125, 50, 0.25); padding: 4px 12px; border-radius: 999px; white-space: nowrap; }
 .last-order-empty p { font-size: calc(15px * var(--fs, 1)); color: var(--muted); margin-top: 6px; }
 .last-order-empty small { font-size: calc(15px * var(--fs, 1)); color: var(--muted); display: block; margin-top: 2px; }
 .last-order-empty .btn { margin-top: 10px; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 300; font-size: calc(18px * var(--fs, 1)); line-height: 1.2; }
@@ -1995,6 +1995,7 @@ body.dark-green-mode .brand-text small { color: #c8ddd0; }
 .app-shell.dark-green .last-order-card,
 .app-shell.dark-green .last-order-item,
 .app-shell.dark-green .producer-add-card { background: rgba(0, 0, 0, 0.35); border-color: rgba(255, 255, 255, 0.18); }
+.app-shell.dark-green .last-order-subtitle { color: #c8ddd0; background: rgba(200, 221, 208, 0.15); border-color: rgba(200, 221, 208, 0.25); }
 .app-shell.dark-green .last-order-thumb,
 .app-shell.dark-green .last-order-avatar { background: rgba(255, 255, 255, 0.1); }
 .app-shell.dark-green .cultivator-card,
