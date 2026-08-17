@@ -146,7 +146,7 @@ router.post('/produs/nou', producerOnly, single('image'), (req, res) => {
     INSERT INTO products (producer_id, name, description, price, unit, category, image_url, available)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).run(producer.id, String(name).trim(), String(description || '').trim(), numericPrice,
-    String(unit || 'kg').trim(), String(category), imageUrl, available ? 1 : 0);
+    String(unit || 'kg').trim(), String(category), imageUrl, available === undefined || available ? 1 : 0);
 
   if (isJson) return res.json({ ok: true, id: result.lastInsertRowid, name: String(name).trim() });
   res.redirect('/dashboard');

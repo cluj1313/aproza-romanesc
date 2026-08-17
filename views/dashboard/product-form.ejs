@@ -54,12 +54,10 @@
       </div>
     </label>
 
-    <% if (product) { %>
-      <label class="checkbox">
-        <input type="checkbox" name="available" value="1" <%= product.available ? 'checked' : '' %>>
-        <span>Produsul este disponibil pentru clienți</span>
-      </label>
-    <% } %>
+    <label class="checkbox">
+      <input type="checkbox" name="available" value="1" <%= !product || product.available ? 'checked' : '' %>>
+      <span>Produsul este disponibil pentru clienți</span>
+    </label>
 
     <div class="form-actions">
       <button type="submit" class="btn btn-primary"><%= product ? 'Salvează modificările' : 'Publică produsul' %></button>
