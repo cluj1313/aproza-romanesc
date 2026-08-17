@@ -26,7 +26,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
+const SqliteStore = require('better-sqlite3-session-store')(session);
+const db = require('./db');
+
 app.use(session({
+  store: new SqliteStore({
+    client: db,
+    expired: { clear: true, intervalMs: 900000 }
+  }),
   secret: process.env.SESSION_SECRET || 'schimba_aceasta_cheie_in_productie',
   resave: false,
   saveUninitialized: false,
