@@ -2088,6 +2088,22 @@ body.dark-green-mode {
 .cultivator-avatar { cursor: pointer; }
 .cart-thumb img, .pcard-img img { cursor: zoom-in; }
 
+/* ---------- Favorites ---------- */
+.fav-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.85); border: none; cursor: pointer;
+  color: #e57373; transition: background .2s, transform .2s;
+  flex-shrink: 0;
+}
+.fav-btn:hover { background: #fff; transform: scale(1.15); }
+.fav-btn.fav-active { background: #e57373; color: #fff; }
+.fav-btn svg { fill: currentColor; }
+.fav-title { font-size: calc(24px * var(--fs, 1)); font-weight: 400; }
+.fav-sub { color: var(--muted); margin-bottom: 16px; }
+.fav-empty { text-align: center; padding: 40px 16px; color: var(--muted); }
+.fav-empty-heart { color: #e57373; font-size: 22px; }
+
 /* ---------- Responsive (desktop) ---------- */
 @media (min-width: 501px) {
   .app-shell { margin: 16px auto; border-radius: 22px; min-height: calc(100vh - 32px); }

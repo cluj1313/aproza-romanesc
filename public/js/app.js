@@ -805,4 +805,39 @@
     });
   }
 
+  /* ---------- Favorites (localStorage) ---------- */
+  function getFavs() {
+    try { return JSON.parse(localStorage.getItem('aprozar-favs') || '[]'); } catch (e) { return []; }
+  }
+  function saveFavs(arr) {
+    try { localStorage.setItem('aprozar-favs', JSON.stringify(arr)); } catch (e) {}
+  }
+  function syncFavBtns() {
+    var favs = getFavs();
+    document.querySelectorAll('.fav-btn[data-fav]').forEach(function (btn) {
+      if (favs.indexOf(btn.dataset.fav) >= 0) {
+        btn.classList.add('fav-active');
+        btn.setAttribute('aria-label', 'Elimină din favorite');
+      } else {
+        btn.classList.remove('fav-active');
+        btn.setAttribute('aria-label', 'Adaugă la favorite');
+      }
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.fav-btn[data-fav]');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var id = btn.dataset.fav;
+    var favs = getFavs();
+    var idx = favs.indexOf(id);
+    if (idx >= 0) { favs.splice(idx, 1); } else { favs.push(id); }
+    saveFavs(favs);
+    syncFavBtns();
+  });
+
+  syncFavBtns();
+
 })();

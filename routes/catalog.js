@@ -309,4 +309,33 @@ router.get('/api/suggest', express.json(), async (req, res) => {
   res.json(results);
 });
 
+router.get('/favorit', (req, res) => {
+  res.render('favorites/index', {
+    title: 'Favoriți',
+    cartCount: res.locals.cartCount ? res.locals.cartCount.count : 0
+  });
+});
+
+router.get('/api/favorites', express.json(), async (req, res) => {
+  const ids = String(req.query.ids || '').split(',').filter(Boolean).map(Number).filter(n => n > 0);
+  if (!ids.length) return res.json([]);
+
+  const placeholders = ids.map(() => '?').join(',');
+  const producers = await db.prepare(`
+    SELECT p.* FROM producers p WHERE p.id IN (${placeholders}) ORDER BY p.name
+  `).all(...ids);
+
+  const loc = req.session.location || {};
+  const { withDistance } = require('../lib/geo');
+  const producersWithDist = withDistance(producers, loc.lat, loc.lng);
+
+  for (const p of producersWithDist) {
+    const rv = await avgRating(p.id);
+    p.rating = rv.avg;
+    p.ratingCount = rv.count;
+  }
+
+  res.json(producersWithDist);
+});
+
 module.exports = router;
