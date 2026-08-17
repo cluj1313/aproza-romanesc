@@ -65,7 +65,10 @@
         <span class="section-sub"><% if (hasLocation) { %>Sortat după locația ta<% } else { %>Permite locația pentru a vedea distanțele față de tine<% } %></span>
       </div>
       <% if (!hasLocation) { %>
-        <button type="button" class="btn btn-primary btn-sm" id="locateCultivators">📍 <span>Activează locația</span></button>
+        <div class="locate-row">
+          <button type="button" class="btn btn-primary btn-sm" id="locateCultivators">📍 <span>Activează locația</span></button>
+          <% if (!user) { %><button type="button" class="btn btn-primary btn-sm" data-quick-login>⚡ Recumpără Rapid</button><% } %>
+        </div>
       <% } %>
       <div class="cultivator-list">
         <% producers.forEach(p => { %><%- include('../partials/cultivator-card', { c: p, isProducer, producerUserId }) %><% }) %>

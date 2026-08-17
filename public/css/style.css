@@ -504,6 +504,7 @@ img { display: block; max-width: 100%; }
 .home-section { margin-bottom: 24px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; gap: 8px; }
 .section-head h2 { font-size: calc(18px * var(--fs, 1)); font-weight: 300; font-family: 'Oswald', 'Arial Narrow', sans-serif; }
+.locate-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
 
 /* Titlu â€žPoveÈ™ti de la ProducÄƒtorii Localiâ€ */
 .farmers-title {
