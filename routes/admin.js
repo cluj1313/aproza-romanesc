@@ -87,6 +87,14 @@ router.post('/admin/moderatie/warn', requireAdmin, async (req, res) => {
   res.redirect('/admin/moderatie?warned=1');
 });
 
+router.post('/admin/moderatie/message', requireAdmin, async (req, res) => {
+  const userId = parseInt(req.body.user_id, 10);
+  const message = String(req.body.message || '').trim();
+  if (!userId || !message) return res.redirect('/admin/moderatie?error=1');
+  await db.prepare('INSERT INTO moderation (user_id, type, message, sent_by) VALUES (?, \'warning\', ?, ?)').run(userId, message, req.session.user.id);
+  res.redirect('/admin/moderatie?messaged=1');
+});
+
 router.post('/admin/moderatie/ban', requireAdmin, async (req, res) => {
   const userId = parseInt(req.body.user_id, 10);
   const message = String(req.body.message || '').trim();

@@ -3,155 +3,153 @@
 <div class="page-container">
   <div class="page-head">
     <h1>Moderatie</h1>
-    <p class="sub">Gestionează avertismentele și suspendarea conturilor</p>
+    <p class="sub">Gestionează avertismentele, mesajele și suspendarea conturilor</p>
   </div>
 
-  <% if (query.warned) { %><div class="alert alert-success">Avertisment trimis.</div><% } %>
-  <% if (query.banned) { %><div class="alert alert-success">Contul a fost suspendat.</div><% } %>
-  <% if (query.unbanned) { %><div class="alert alert-success">Contul a fost deblocat.</div><% } %>
-  <% if (query.logdeleted) { %><div class="alert alert-success">Înregistrare ștearsă.</div><% } %>
-  <% if (query.error) { %><div class="alert alert-error">Eroare. Verifică datele.</div><% } %>
+  <% if (query.warned) { %><div class="alert alert-success">✅ Avertisment trimis.</div><% } %>
+  <% if (query.banned) { %><div class="alert alert-success">✅ Contul a fost suspendat.</div><% } %>
+  <% if (query.unbanned) { %><div class="alert alert-success">✅ Contul a fost deblocat.</div><% } %>
+  <% if (query.messaged) { %><div class="alert alert-success">✅ Mesaj trimis.</div><% } %>
+  <% if (query.logdeleted) { %><div class="alert alert-success">✅ Înregistrare ștearsă.</div><% } %>
+  <% if (query.error) { %><div class="alert alert-error">⚠ Eroare. Verifică datele.</div><% } %>
 
   <section class="panel" style="margin-bottom:24px;">
-    <h3 style="margin-bottom:12px;">Conturi utilizatori</h3>
-    <div style="overflow-x:auto;">
-      <table style="width:100%;border-collapse:collapse;font-size:14px;">
-        <thead>
-          <tr style="background:#f5f5f5;border-bottom:2px solid #ddd;text-align:left;">
-            <th style="padding:10px 12px;">Nume</th>
-            <th style="padding:10px 12px;">Telefon</th>
-            <th style="padding:10px 12px;">Tip</th>
-            <th style="padding:10px 12px;">Avertismente</th>
-            <th style="padding:10px 12px;">Status</th>
-            <th style="padding:10px 12px;">Acțiuni</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% users.forEach(u => { %>
-            <tr style="border-bottom:1px solid #eee;<%= u.is_banned ? 'background:#fff5f5;' : '' %>">
-              <td style="padding:10px 12px;">
-                <strong><%= u.name %></strong>
-                <% if (u.is_admin) { %><span class="badge" style="background:#7c3aed;color:#fff;font-size:10px;margin-left:6px;">Admin</span><% } %>
-              </td>
-              <td style="padding:10px 12px;font-family:monospace;"><%= u.phone %></td>
-              <td style="padding:10px 12px;">
-                <span class="badge" style="background:<%= u.role === 'producer' ? 'var(--green-dark)' : '#6b7280' %>;color:#fff;"><%= u.role === 'producer' ? 'Producator' : 'Client' %></span>
-              </td>
-              <td style="padding:10px 12px;text-align:center;">
-                <% if (u.warnings > 0) { %>
-                  <span style="color:#d97706;font-weight:600;"><%= u.warnings %></span>
-                <% } else { %>
-                  <span style="color:#aaa;">0</span>
-                <% } %>
-              </td>
-              <td style="padding:10px 12px;">
-                <% if (u.is_banned) { %>
-                  <span class="badge" style="background:#e53e3e;color:#fff;">Suspendat</span>
-                <% } else { %>
-                  <span class="badge" style="background:#16a34a;color:#fff;">Activ</span>
-                <% } %>
-              </td>
-              <td style="padding:10px 12px;white-space:nowrap;">
-                <% if (!u.is_admin) { %>
-                  <% if (!u.is_banned) { %>
-                    <button type="button" class="btn btn-sm btn-ghost" style="color:#d97706;" onclick="openWarnModal(<%= u.id %>, '<%= u.name.replace(/'/g, "\\'") %>')">⚠ Avertisment</button>
-                    <button type="button" class="btn btn-sm btn-ghost" style="color:#e53e3e;" onclick="openBanModal(<%= u.id %>, '<%= u.name.replace(/'/g, "\\'") %>')">🚫 Blochează</button>
-                  <% } else { %>
-                    <form method="POST" action="/admin/moderatie/unban" style="display:inline;" onsubmit="return confirm('Deblocăm contul?');">
-                      <input type="hidden" name="user_id" value="<%= u.id %>">
-                      <button type="submit" class="btn btn-sm btn-ghost" style="color:#16a34a;">✓ Deblochează</button>
-                    </form>
-                  <% } %>
-                <% } %>
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
+    <h3 style="margin-bottom:16px;font-size:20px;">👥 Toți utilizatorii</h3>
+    <% users.forEach(u => { %>
+      <div class="mod-user-card" style="background:<%= u.is_banned ? '#fff5f5' : '#fff' %>;border:1px solid <%= u.is_banned ? '#e53e3e' : '#e2e8f0' %>;border-radius:12px;padding:16px;margin-bottom:12px;">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;">
+            <div style="font-size:18px;font-weight:600;">
+              <%= u.name %>
+              <% if (u.is_admin) { %><span class="badge" style="background:#7c3aed;color:#fff;font-size:11px;margin-left:6px;">Admin</span><% } %>
+              <% if (u.is_banned) { %><span class="badge" style="background:#e53e3e;color:#fff;font-size:11px;margin-left:6px;">🚫 Suspendat</span><% } %>
+            </div>
+            <div style="font-size:14px;color:#666;margin-top:4px;">
+              📱 <%= u.phone %> · 
+              <span class="badge" style="background:<%= u.role === 'producer' ? 'var(--green-dark)' : '#6b7280' %>;color:#fff;font-size:11px;"><%= u.role === 'producer' ? 'Producator' : 'Client' %></span>
+              <% if (u.warnings > 0) { %> · ⚠️ <%= u.warnings %> avertismente<% } %>
+            </div>
+            <% if (u.ban_reason) { %>
+              <div style="font-size:13px;color:#e53e3e;margin-top:4px;">Motiv suspendare: <%= u.ban_reason %></div>
+            <% } %>
+          </div>
+          <% if (!u.is_admin) { %>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button type="button" class="btn btn-mod btn-warn" onclick="openMsgModal(<%= u.id %>, '<%= u.name.replace(/'/g, "\\'") %>', 'warning')">💬 Mesaj</button>
+              <button type="button" class="btn btn-mod btn-ban" onclick="openMsgModal(<%= u.id %>, '<%= u.name.replace(/'/g, "\\'") %>', 'ban')">🚫 Blochează</button>
+              <% if (u.is_banned) { %>
+                <form method="POST" action="/admin/moderatie/unban" style="display:inline;" onsubmit="return confirm('Deblocăm contul acestui utilizator?');">
+                  <input type="hidden" name="user_id" value="<%= u.id %>">
+                  <button type="submit" class="btn btn-mod btn-unban">✅ Deblochează</button>
+                </form>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
   </section>
 
   <section class="panel">
-    <h3 style="margin-bottom:12px;">Istoric moderatie (ultimele 50)</h3>
+    <h3 style="margin-bottom:12px;font-size:20px;">📋 Istoric acțiuni (ultimele 50)</h3>
     <% if (!moderationLog.length) { %>
       <div class="empty-state"><p>Nu există acțiuni de moderatie.</p></div>
     <% } %>
     <% moderationLog.forEach(m => { %>
-      <div class="dash-row" style="display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);">
-        <div style="flex-shrink:0;font-size:20px;"><%= m.type === 'ban' ? '🚫' : '⚠️' %></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);">
+        <div style="flex-shrink:0;font-size:24px;"><%= m.type === 'ban' ? '🚫' : '⚠️' %></div>
         <div style="flex:1;">
-          <div style="font-size:13px;">
+          <div style="font-size:14px;">
             <strong><%= m.user_name %></strong>
             <% if (m.type === 'ban') { %>
-              <span class="badge" style="background:#e53e3e;color:#fff;font-size:10px;">Suspendat</span>
+              <span class="badge" style="background:#e53e3e;color:#fff;font-size:11px;">Suspendat</span>
             <% } else { %>
-              <span class="badge" style="background:#d97706;color:#fff;font-size:10px;">Avertisment</span>
+              <span class="badge" style="background:#d97706;color:#fff;font-size:11px;">Avertisment</span>
             <% } %>
           </div>
-          <p style="margin:4px 0 0;font-size:13px;color:#444;"><%= m.message %></p>
+          <p style="margin:4px 0 0;font-size:14px;color:#444;"><%= m.message %></p>
           <small style="color:#999;">
             trimis de <strong><%= m.admin_name || 'Admin' %></strong> · <%= new Date(m.created_at).toLocaleString('ro-RO') %>
           </small>
         </div>
-        <form method="POST" action="/admin/moderatie/delete-log" style="display:inline;" onsubmit="return confirm('Ștergi înregistrarea?');">
+        <form method="POST" action="/admin/moderatie/delete-log" style="display:inline;" onsubmit="return confirm('Ștergi această înregistrare?');">
           <input type="hidden" name="log_id" value="<%= m.id %>">
-          <button type="submit" class="btn btn-sm btn-ghost" style="color:#999;">✕</button>
+          <button type="submit" class="btn btn-sm btn-ghost" style="color:#999;font-size:18px;" title="Șterge">✕</button>
         </form>
       </div>
     <% }) %>
   </section>
 </div>
 
-<div id="warnModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:12px;padding:24px;max-width:440px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
-    <h3 style="margin:0 0 8px;color:#d97706;">⚠️ Trimite avertisment</h3>
-    <p style="margin:0 0 12px;font-size:14px;color:#666;">Către: <strong id="warnTarget"></strong></p>
-    <form method="POST" action="/admin/moderatie/warn">
-      <input type="hidden" name="user_id" id="warnUserId">
+<div id="msgModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;padding:24px;max-width:460px;width:92%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
+    <h3 id="msgModalTitle" style="margin:0 0 4px;">💬 Trimite mesaj</h3>
+    <p style="margin:0 0 16px;font-size:14px;color:#666;">Către: <strong id="msgTarget"></strong></p>
+    <p id="msgModalDesc" style="margin:0 0 12px;font-size:13px;color:#888;"></p>
+    <form method="POST" id="msgForm">
+      <input type="hidden" name="user_id" id="msgUserId">
+      <input type="hidden" name="action_type" id="msgActionType">
       <label class="pa-field">
-        <span>Motivul avertismentului</span>
-        <textarea name="message" rows="3" required placeholder="Ex: Comportament neadecvat, limbaj neadecvat, încălcarea regulilor..."></textarea>
+        <span id="msgFieldLabel">Mesajul tău</span>
+        <textarea name="message" id="msgTextarea" rows="4" required placeholder="Scrie mesajul aici..."></textarea>
       </label>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
-        <button type="button" class="btn btn-sm btn-ghost" onclick="closeModals()">Anulează</button>
-        <button type="submit" class="btn btn-sm" style="background:#d97706;color:#fff;">Trimite avertisment</button>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:16px;">
+        <button type="button" class="btn btn-ghost" onclick="closeMsgModal()" style="font-size:16px;padding:10px 20px;">Anulează</button>
+        <button type="submit" id="msgSubmitBtn" class="btn btn-primary" style="font-size:16px;padding:10px 24px;">Trimite</button>
       </div>
     </form>
   </div>
 </div>
 
-<div id="banModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
-  <div style="background:#fff;border-radius:12px;padding:24px;max-width:440px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.2);">
-    <h3 style="margin:0 0 8px;color:#e53e3e;">🚫 Blochează contul</h3>
-    <p style="margin:0 0 12px;font-size:14px;color:#666;">Către: <strong id="banTarget"></strong></p>
-    <form method="POST" action="/admin/moderatie/ban">
-      <input type="hidden" name="user_id" id="banUserId">
-      <label class="pa-field">
-        <span>Motivul suspendării</span>
-        <textarea name="message" rows="3" required placeholder="Ex: Încălcarea repetată a regulilor, comportament abuziv..."></textarea>
-      </label>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
-        <button type="button" class="btn btn-sm btn-ghost" onclick="closeModals()">Anulează</button>
-        <button type="submit" class="btn btn-sm" style="background:#e53e3e;color:#fff;">Blochează contul</button>
-      </div>
-    </form>
-  </div>
-</div>
+<style>
+.btn-mod {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-warn { background: #fef3c7; color: #92400e; border: 2px solid #f59e0b; }
+.btn-warn:hover { background: #fde68a; }
+.btn-ban { background: #fee2e2; color: #991b1b; border: 2px solid #e53e3e; }
+.btn-ban:hover { background: #fecaca; }
+.btn-unban { background: #d1fae5; color: #065f46; border: 2px solid #10b981; }
+.btn-unban:hover { background: #a7f3d0; }
+</style>
 
 <script>
-function openWarnModal(id, name) {
-  document.getElementById('warnUserId').value = id;
-  document.getElementById('warnTarget').textContent = name;
-  document.getElementById('warnModal').style.display = 'flex';
+function openMsgModal(id, name, type) {
+  document.getElementById('msgUserId').value = id;
+  document.getElementById('msgTarget').textContent = name;
+  document.getElementById('msgActionType').value = type;
+  document.getElementById('msgForm').action = type === 'ban' ? '/admin/moderatie/ban' : '/admin/moderatie/warn';
+  if (type === 'ban') {
+    document.getElementById('msgModalTitle').textContent = '🚫 Blochează contul';
+    document.getElementById('msgModalTitle').style.color = '#991b1b';
+    document.getElementById('msgModalDesc').textContent = 'Utilizatorul nu se va mai putea autentifica.';
+    document.getElementById('msgFieldLabel').textContent = 'Motivul blocării (obligatoriu)';
+    document.getElementById('msgTextarea').placeholder = 'Ex: Comportament abuziv, încălcarea regulilor repetat...';
+    document.getElementById('msgSubmitBtn').textContent = '🚫 Blochează contul';
+    document.getElementById('msgSubmitBtn').style.background = '#e53e3e';
+  } else {
+    document.getElementById('msgModalTitle').textContent = '💬 Trimite mesaj / Avertisment';
+    document.getElementById('msgModalTitle').style.color = '#92400e';
+    document.getElementById('msgModalDesc').textContent = 'Mesajul va apărea ca un banner galben când utilizatorul deschide aplicația.';
+    document.getElementById('msgFieldLabel').textContent = 'Mesajul pentru utilizator';
+    document.getElementById('msgTextarea').placeholder = 'Ex: Te rugăm să respecți regulile comunității...';
+    document.getElementById('msgSubmitBtn').textContent = '💬 Trimite mesajul';
+    document.getElementById('msgSubmitBtn').style.background = '#d97706';
+  }
+  document.getElementById('msgTextarea').value = '';
+  document.getElementById('msgModal').style.display = 'flex';
 }
-function openBanModal(id, name) {
-  document.getElementById('banUserId').value = id;
-  document.getElementById('banTarget').textContent = name;
-  document.getElementById('banModal').style.display = 'flex';
-}
-function closeModals() {
-  document.getElementById('warnModal').style.display = 'none';
-  document.getElementById('banModal').style.display = 'none';
+function closeMsgModal() {
+  document.getElementById('msgModal').style.display = 'none';
 }
 </script>
 

@@ -113,7 +113,7 @@
               <p><%= w.message %></p>
               <small><%= new Date(w.created_at).toLocaleString('ro-RO') %></small>
             </div>
-            <button type="button" class="warning-banner-close" onclick="dismissWarning(<%= w.id %>)" title="Am înțeles">✕</button>
+            <button type="button" class="warning-banner-close" onclick="dismissWarning(<%= w.id %>)">Am înțeles</button>
           </div>
         <% }) %>
       </div>
