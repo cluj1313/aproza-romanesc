@@ -352,14 +352,16 @@ async function seedMocks() {
       console.log(`Mock parțial (${existing.c}/${expected}). Continuă seed.`);
     }
 
-    const startIdx = existing.c;
-    let mockIdx = startIdx;
+    let mockIdx = 0;
     for (const cat of CATEGORIES) {
       const products = MOCK_PRODUCTS[cat.name] || MOCK_PRODUCTS['Altele'];
       for (let i = 0; i < 3; i++) {
+        const phone = `0700${String(100000 + mockIdx).slice(0, 6)}`;
+        const exists = await db.prepare('SELECT id FROM users WHERE phone = ?').get(phone);
+        if (exists) { mockIdx++; continue; }
+
         const town = MOCK_TOWNS[(mockIdx) % MOCK_TOWNS.length];
         const farmName = `Ferma Mock ${cat.icon} ${town.locality} #${mockIdx + 1}`;
-        const phone = `0700${String(100000 + mockIdx).slice(0, 6)}`;
         const email = `mock${mockIdx}@test.local`;
 
         const userResult = await db.prepare(
