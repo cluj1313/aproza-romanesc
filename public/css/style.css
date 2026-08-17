@@ -644,12 +644,11 @@ img { display: block; max-width: 100%; }
 .cat-grid-card:hover { box-shadow: var(--shadow); transform: translateY(-2px); border-color: var(--cat-color); }
 .cat-grid-card.pinned { border-color: var(--cat-color); box-shadow: 0 0 0 2px var(--cat-color); }
 .cat-grid-link { display: block; text-decoration: none; color: var(--text); }
-.cat-grid-img { height: 110px; background: var(--green-light); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.cat-grid-img { position: relative; height: 110px; background: var(--green-light); display: flex; align-items: center; justify-content: center; overflow: hidden; }
 .cat-grid-img img { width: 100%; height: 100%; object-fit: cover; }
 .cat-icon-big { font-size: calc(40px * var(--fs, 1)); }
-.cat-grid-info { padding: 10px 12px; display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
-.cat-grid-info strong { font-size: calc(14px * var(--fs, 1)); }
-.cat-grid-info small { color: var(--muted); font-size: calc(12px * var(--fs, 1)); white-space: nowrap; }
+.cat-grid-label { position: absolute; bottom: 32px; left: 8px; background: rgba(0,0,0,0.45); color: #fff; font-size: calc(12px * var(--fs, 1)); padding: 3px 8px; border-radius: 999px; white-space: nowrap; pointer-events: none; }
+.cat-grid-count { position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.45); color: #fff; font-size: calc(11px * var(--fs, 1)); padding: 2px 7px; border-radius: 999px; white-space: nowrap; pointer-events: none; }
 .cat-pin-btn {
   position: absolute;
   top: 8px;

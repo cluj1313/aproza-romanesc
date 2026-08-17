@@ -21,10 +21,8 @@
         <a href="/?category=<%= encodeURIComponent(c.name) %>" class="cat-grid-link">
           <div class="cat-grid-img">
             <img src="<%= c.image %>" alt="<%= c.name %>" loading="lazy" onerror="this.outerHTML='<span class=&quot;cat-icon-big&quot;><%= c.icon %></span>'">
-          </div>
-          <div class="cat-grid-info">
-            <strong><%= c.icon %> <%= c.name %></strong>
-            <small><%= c.count %> produse</small>
+            <span class="cat-grid-label"><%= c.icon %> <%= c.name %></span>
+            <span class="cat-grid-count"><%= c.count %> produse</span>
           </div>
         </a>
         <button type="button" class="cat-pin-btn" data-pin="<%= c.name %>" aria-label="Fixează <%= c.name %> sus" title="Fixează sus"><svg class="cat-pin-svg" viewBox="0 0 24 24" width="20" height="20" fill="#2e7d32" stroke="#2e7d32" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#fff"/></svg></button>
